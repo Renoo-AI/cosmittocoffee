@@ -131,7 +131,7 @@ function App() {
         {/* Video Background */}
         <div className="absolute inset-0 z-0 opacity-40">
           <video autoPlay muted loop playsInline className="w-full h-full object-cover scale-105">
-            <source src="https://dropshare.42web.io/1/files/9asN6BXde2.mp4" type="video/mp4" />
+            <source src="/video.mp4" type="video/mp4" />
           </video>
         </div>
 
