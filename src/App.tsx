@@ -751,7 +751,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         </p>
         <div className="hero-enter hero-enter-delay-3 mt-10 flex flex-col sm:flex-row gap-4">
           <button onClick={() => onNav('menu')} className="ripple-target mobile-tap magnetic motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#f3eee9] transition-colors">
-            VIEW FULL MENU -&gt;
+            VIEW FULL MENU →
           </button>
           <button onClick={() => onNav('landing', 'story')} className="ripple-target mobile-tap magnetic motion-card bg-transparent text-[#f3eee9] hover:bg-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#f3eee9] transition-colors">
             OUR STORY
@@ -864,7 +864,7 @@ function CategoryGrid({ onNav }: { onNav: (page: Page, anchor?: string) => void 
             </h2>
           </div>
           <button onClick={() => onNav('menu')} className="ripple-target mobile-tap motion-card text-[#f3eee9] hover:text-[#e61a23] font-black tracking-widest text-sm md:text-base border-b-2 border-current pb-1">
-            SEE FULL MENU -&gt;
+            SEE FULL MENU →
           </button>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -910,7 +910,7 @@ function HappyHour({ onNav }: { onNav: (page: Page, anchor?: string) => void }) 
             <p className="text-lg">1 Boisson Froide au choix</p>
             <div className="mt-6 pt-6 border-t-4 border-dashed border-[#120d0e]">
               <span className="bg-[#e61a23] text-[#f3eee9] px-4 py-2 font-black tracking-widest inline-block rotate-[-3deg] border-2 border-[#120d0e]">
-                -&gt; 1 COOKIE OFFERT !
+                → 1 COOKIE OFFERT !
               </span>
             </div>
           </div>
@@ -920,13 +920,13 @@ function HappyHour({ onNav }: { onNav: (page: Page, anchor?: string) => void }) 
             <p className="text-lg">1 Patisserie au choix</p>
             <div className="mt-6 pt-6 border-t-4 border-dashed border-[#f3eee9]">
               <span className="bg-[#e61a23] text-[#f3eee9] px-4 py-2 font-black tracking-widest inline-block rotate-[3deg] border-2 border-[#f3eee9]">
-                -&gt; 1 CAFE OFFERT !
+                → 1 CAFE OFFERT !
               </span>
             </div>
           </div>
         </div>
         <button onClick={() => onNav('menu')} className="ripple-target mobile-tap motion-card mt-12 bg-[#120d0e] text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#120d0e] transition-colors">
-          EXPLORE FULL MENU -&gt;
+          EXPLORE FULL MENU →
         </button>
       </div>
     </section>
@@ -1116,7 +1116,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-[#e61a23]/30 blur-3xl" />
         <div className="hero-enter relative max-w-[1400px] mx-auto px-4 md:px-8 text-center">
           <button onClick={() => onNav('landing')} className="text-[#e61a23] hover:text-[#f3eee9] font-black tracking-widest text-sm mb-6 border-b-2 border-[#e61a23] pb-1">
-            &lt;- BACK TO HOME
+            ← BACK TO HOME
           </button>
           <div className="mb-8 flex justify-center">
             <BrandLogo
@@ -1225,7 +1225,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
           <div className="text-center mt-16">
             <button onClick={() => { onNav('landing'); window.scrollTo({ top: 0 }); }} className="ripple-target mobile-tap motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#120d0e] transition-colors">
-              &lt;- BACK TO HOME
+              ← BACK TO HOME
             </button>
           </div>
         </div>
