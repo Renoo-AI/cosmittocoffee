@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const menuData = {
   morningBoost: [
@@ -84,274 +84,341 @@ const logos = {
 function App() {
   const [activeTab, setActiveTab] = useState('coffee');
 
-  const Section = ({ title, emoji, items, twoCols = false, children }) => (
-    <div className="mb-12">
-      <h3 className="text-2xl md:text-3xl font-black text-primary mb-6 uppercase tracking-wider flex items-center gap-3">
-        <span>{emoji}</span> {title}
-      </h3>
-      {children ? children : (
-        <div className={`grid gap-6 ${twoCols ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
-          {items.map((item, i) => (
-            <div key={i} className="bg-white p-5 rounded-2xl shadow-sm border border-accent-1 hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start mb-2 gap-4">
-                <h4 className="font-bold text-lg text-secondary leading-tight">{item.name}</h4>
-                <span className="font-bold text-primary whitespace-nowrap bg-red-50 px-3 py-1 rounded-full text-sm">{item.price}</span>
-              </div>
-              {item.desc && <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>}
-            </div>
-          ))}
-        </div>
-      )}
+  useEffect(() => {
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  }, []);
+
+  const BrutalistItem = ({ item }) => (
+    <div className="group border-b-2 border-secondary/20 py-4 hover:border-primary transition-colors flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+      <div className="flex-1">
+        <h4 className="font-sans font-bold text-xl md:text-2xl text-secondary group-hover:text-primary transition-colors">{item.name}</h4>
+        {item.desc && <p className="text-secondary/70 font-medium text-sm mt-1">{item.desc}</p>}
+      </div>
+      <div className="bg-primary text-off-white font-sans font-black px-4 py-2 text-lg transform group-hover:scale-105 transition-transform">
+        {item.price}
+      </div>
     </div>
   );
 
+  const SectionHeader = ({ title }) => (
+    <h3 className="text-4xl md:text-6xl font-black text-secondary mb-10 tracking-tighter leading-none border-t-8 border-secondary pt-4">
+      {title}
+    </h3>
+  );
+
   return (
-    <div className="min-h-screen bg-off-white font-secondary text-secondary">
+    <div className="min-h-screen bg-off-white font-secondary text-secondary overflow-x-hidden selection:bg-primary selection:text-white">
+
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 mix-blend-difference px-6 py-4 flex justify-between items-center pointer-events-none">
+        <img src={logos.white} alt="Cosmitto" className="h-8 md:h-12 pointer-events-auto" />
+        <div className="hidden md:flex gap-8 font-sans font-bold text-white tracking-widest text-sm pointer-events-auto">
+          <a href="#menu" className="hover:text-primary transition-colors">MENU</a>
+          <a href="#location" className="hover:text-primary transition-colors">LOCATION</a>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <div className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0"
-        >
-          <source src="https://dropshare.42web.io/1/files/9asN6BXde2.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-black/60 z-10"></div>
-        <div className="relative z-20 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
-          <img src={logos.white} alt="Cosmitto Logo" className="h-24 md:h-32 mb-8" />
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">
-            YOUR DAILY DOSE OF <span className="text-primary">BENNA</span>
-          </h1>
-          <p className="text-lg md:text-xl text-off-white font-medium max-w-2xl mx-auto mb-8">
-            Experience the perfect blend of specialty coffee, gourmet treats, and a cosmic atmosphere at Lac I.
-          </p>
-          <div className="flex gap-4">
-            <a href="#menu" className="bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-red-700 transition-colors uppercase tracking-wide">
-              Explore Menu
-            </a>
-            <a href="#location" className="bg-white text-secondary font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors uppercase tracking-wide">
-              Visit Us
-            </a>
+      <section className="relative h-screen w-full flex flex-col justify-between bg-noise clip-diagonal bg-secondary overflow-hidden">
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0 opacity-40">
+          <video autoPlay muted loop playsInline className="w-full h-full object-cover scale-105">
+            <source src="https://dropshare.42web.io/1/files/9asN6BXde2.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center px-6 md:px-16 mt-20">
+          <div className="reveal">
+            <h1 className="text-[12vw] md:text-[8vw] leading-[0.8] font-black text-off-white tracking-tighter mb-4">
+              COSMIC <br/>
+              <span className="text-primary">BENNA.</span>
+            </h1>
+            <p className="text-off-white/80 font-medium text-lg md:text-2xl max-w-xl mt-8 border-l-4 border-primary pl-6">
+              Experience the perfect blend of specialty coffee, gourmet treats, and raw atmosphere at Lac I.
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Highlights / Happy Hour */}
-      <div className="bg-secondary text-white py-12">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-primary to-red-800 p-8 rounded-3xl shadow-xl">
-            <div className="flex-1">
-              <h3 className="text-sm font-bold tracking-widest text-red-200 mb-2 uppercase">Every Day • 15:00 - 18:00</h3>
-              <h2 className="text-3xl md:text-4xl font-black mb-4">🕒 HAPPY HOUR</h2>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/20 p-2 rounded-lg">🧊</div>
-                  <p><strong>Option Cold:</strong> 1 Boisson Froide au choix ➔ <span className="text-yellow-300 font-bold">1 Cookie offert !</span></p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/20 p-2 rounded-lg">🍰</div>
-                  <p><strong>Option Sweet:</strong> 1 Pâtisserie au choix ➔ <span className="text-yellow-300 font-bold">1 Café classique offert !</span></p>
-                </div>
-              </div>
-            </div>
-            <div className="hidden md:block">
-              <img src={images.pancakes} alt="Happy Hour Treats" className="w-48 h-48 object-cover rounded-2xl shadow-lg border-4 border-white/10" />
-            </div>
+        {/* Marquee Ticker */}
+        <div className="relative z-10 bg-primary text-off-white py-4 overflow-hidden border-t border-b border-off-white/20">
+          <div className="animate-marquee font-sans font-black text-2xl md:text-4xl tracking-widest uppercase whitespace-nowrap">
+             {/* Repeat text to ensure continuous flow */}
+            {[...Array(6)].map((_, i) => (
+              <span key={i} className="mx-8 flex items-center">
+                YOUR DAILY DOSE OF BENNA <span className="mx-8">✱</span> EST. TUNIS
+              </span>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Main Menu */}
-      <div id="menu" className="container mx-auto px-4 py-20 max-w-6xl">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black text-secondary mb-4 uppercase">Our Menu</h2>
-          <div className="w-24 h-1 bg-primary mx-auto"></div>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
-          {['coffee', 'food', 'cold', 'sweets'].map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-3 rounded-full font-bold uppercase tracking-wide transition-all ${
-                activeTab === tab
-                  ? 'bg-secondary text-white shadow-lg scale-105'
-                  : 'bg-white text-secondary hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              {tab === 'coffee' ? '☕ Coffee & Hot' :
-               tab === 'food' ? '🥞 Breakfast & Lunch' :
-               tab === 'cold' ? '🧊 Cold & Smoothies' : '🍰 Sweets'}
-            </button>
-          ))}
-        </div>
-
-        <div className="bg-off-white">
-          {/* Coffee Tab */}
-          {activeTab === 'coffee' && (
-            <div className="space-y-16 animate-fade-in">
-              {/* Image Banner */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                <img src={images.espresso} className="w-full h-48 object-cover rounded-2xl" alt="Espresso" />
-                <img src={images.latte} className="w-full h-48 object-cover rounded-2xl" alt="Latte" />
-                <img src={images.macchiato} className="w-full h-48 object-cover rounded-2xl hidden md:block" alt="Macchiato" />
-                <img src={images.croissant} className="w-full h-48 object-cover rounded-2xl hidden md:block" alt="Croissant" />
+      {/* Happy Hour Bento Box */}
+      <section className="py-24 px-6 md:px-16 max-w-7xl mx-auto reveal bg-noise">
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 bg-secondary text-off-white p-8 md:p-12 flex flex-col justify-center border-l-8 border-primary group hover:bg-[#1a1314] transition-colors">
+            <div className="uppercase tracking-widest text-primary font-bold text-sm mb-4">Every Day • 15:00 - 18:00</div>
+            <h2 className="text-5xl md:text-7xl font-black mb-8 leading-none tracking-tighter">HAPPY<br/>HOUR</h2>
+            <div className="space-y-6 font-medium text-lg md:text-xl">
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">🧊</span>
+                <p>1 Boisson Froide au choix <br/><span className="text-primary font-bold font-sans">➔ 1 Cookie offert !</span></p>
               </div>
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">🍰</span>
+                <p>1 Pâtisserie au choix <br/><span className="text-primary font-bold font-sans">➔ 1 Café classique offert !</span></p>
+              </div>
+            </div>
+          </div>
+          <div className="h-64 md:h-auto overflow-hidden bg-accent-1 relative group">
+            <img src={images.pancakes} alt="Happy Hour" className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" />
+            <div className="absolute inset-0 bg-primary/20 mix-blend-multiply group-hover:opacity-0 transition-opacity duration-700"></div>
+          </div>
+        </div>
+      </section>
 
-              <Section title="CLASSIC BENNA" emoji="☕" items={[]}>
-                <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-accent-1">
-                  <p className="text-sm text-gray-500 mb-6 italic">{menuData.classicBenna.note}</p>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b-2 border-gray-100">
-                          <th className="py-4 px-4 font-bold text-gray-400 uppercase text-sm">Coffee Selection</th>
-                          <th className="py-4 px-4 font-bold text-center"><span className="text-xl">🟡</span><br/>Kicker</th>
-                          <th className="py-4 px-4 font-bold text-center"><span className="text-xl">🔴</span><br/>House</th>
-                          <th className="py-4 px-4 font-bold text-center"><span className="text-xl">🔵</span><br/>Groove</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {menuData.classicBenna.items.map((item, i) => (
-                          <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                            <td className="py-4 px-4 font-bold">{item.name}</td>
-                            <td className="py-4 px-4 text-center font-medium">{item.kicker}</td>
-                            <td className="py-4 px-4 text-center font-medium">{item.house}</td>
-                            <td className="py-4 px-4 text-center font-medium">{item.groove}</td>
+      {/* Interactive Menu Section */}
+      <section id="menu" className="py-24 bg-off-white bg-noise">
+        <div className="px-6 md:px-16 max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <h2 className="text-6xl md:text-8xl font-black text-secondary leading-none tracking-tighter">THE<br/>MENU.</h2>
+
+            {/* Minimalist Tabs */}
+            <div className="flex flex-wrap gap-4 font-sans font-bold text-sm md:text-base">
+              {[
+                { id: 'coffee', label: 'Coffee & Hot' },
+                { id: 'food', label: 'Food & Bakery' },
+                { id: 'cold', label: 'Cold & Smoothies' },
+                { id: 'sweets', label: 'Sweets' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-6 py-3 uppercase tracking-widest border-2 transition-all ${
+                    activeTab === tab.id
+                      ? 'bg-secondary text-off-white border-secondary'
+                      : 'bg-transparent text-secondary border-secondary/20 hover:border-secondary'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Menu Content Grid */}
+          <div className="grid md:grid-cols-12 gap-12">
+
+            {/* Dynamic Image Col */}
+            <div className="hidden md:block md:col-span-4 space-y-6">
+              {activeTab === 'coffee' && (
+                <>
+                  <img src={images.espresso} className="w-full h-80 object-cover filter contrast-125" alt="Espresso" />
+                  <img src={images.latte} className="w-full h-64 object-cover filter contrast-125 grayscale" alt="Latte" />
+                </>
+              )}
+              {activeTab === 'food' && (
+                <img src={images.croissant} className="w-full h-[600px] object-cover filter contrast-125" alt="Croissant" />
+              )}
+              {activeTab === 'cold' && (
+                <>
+                  <img src={images.mojito} className="w-full h-96 object-cover filter contrast-125" alt="Mojito" />
+                  <img src={images.coldBrew} className="w-full h-64 object-cover filter contrast-125 grayscale" alt="Cold Brew" />
+                </>
+              )}
+              {activeTab === 'sweets' && (
+                <div className="w-full h-[600px] bg-primary flex items-center justify-center p-8 text-off-white">
+                  <h3 className="text-6xl font-black text-outline">SUGAR<br/>RUSH</h3>
+                </div>
+              )}
+            </div>
+
+            {/* List Col */}
+            <div className="md:col-span-8 space-y-20">
+
+              {activeTab === 'coffee' && (
+                <div className="animate-fade-in">
+                  <div className="mb-16">
+                    <SectionHeader title="CLASSIC BENNA" />
+                    <p className="text-secondary/60 mb-8 font-medium italic border-l-2 border-primary pl-4">{menuData.classicBenna.note}</p>
+                    <div className="overflow-x-auto pb-4">
+                      <table className="w-full text-left font-sans">
+                        <thead>
+                          <tr className="border-b-4 border-secondary text-lg">
+                            <th className="py-4 pr-4 font-black">SELECTION</th>
+                            <th className="py-4 px-4 font-black text-center text-primary">KICKER</th>
+                            <th className="py-4 px-4 font-black text-center text-primary">HOUSE</th>
+                            <th className="py-4 px-4 font-black text-center text-primary">GROOVE</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="text-lg font-bold">
+                          {menuData.classicBenna.items.map((item, i) => (
+                            <tr key={i} className="border-b-2 border-secondary/10 hover:bg-secondary/5">
+                              <td className="py-4 pr-4">{item.name}</td>
+                              <td className="py-4 px-4 text-center">{item.kicker}</td>
+                              <td className="py-4 px-4 text-center">{item.house}</td>
+                              <td className="py-4 px-4 text-center">{item.groove}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div className="mb-16">
+                    <SectionHeader title="BENNA DELIGHT" />
+                    <div className="space-y-2">
+                      {menuData.bennaDelight.map((item, i) => (
+                        <div key={i} className="group border-b-2 border-secondary/20 py-4 hover:border-primary transition-colors flex justify-between items-center">
+                          <h4 className="font-sans font-bold text-2xl group-hover:text-primary transition-colors">{item.name}</h4>
+                          <div className="flex gap-6 font-sans font-black text-lg">
+                            <div><span className="text-xs text-secondary/50 block leading-none">MED</span>{item.medium}</div>
+                            <div className="text-primary"><span className="text-xs text-primary/50 block leading-none">GRAND</span>{item.grand}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <SectionHeader title="HOT INFUSIONS" />
+                    <div className="space-y-2">
+                      {menuData.hot.map((item, i) => <BrutalistItem key={i} item={item} />)}
+                    </div>
                   </div>
                 </div>
-              </Section>
+              )}
 
-              <Section title="BENNA DELIGHT" emoji="✨" items={[]}>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {menuData.bennaDelight.map((item, i) => (
-                    <div key={i} className="bg-white p-5 rounded-2xl shadow-sm border border-accent-1 flex justify-between items-center">
-                      <h4 className="font-bold text-lg">{item.name}</h4>
-                      <div className="flex gap-4 text-sm font-medium">
-                        <div className="text-center"><span className="text-gray-400 block text-xs uppercase">Medium</span> {item.medium}</div>
-                        <div className="text-center"><span className="text-gray-400 block text-xs uppercase">Grand</span> {item.grand}</div>
+              {activeTab === 'food' && (
+                <div className="animate-fade-in">
+                  <div className="mb-16">
+                    <SectionHeader title="MORNING BOOST" />
+                    <div className="space-y-2">
+                      {menuData.morningBoost.map((item, i) => <BrutalistItem key={i} item={item} />)}
+                    </div>
+                  </div>
+                  <div>
+                    <SectionHeader title="LUNCH POWER" />
+                    <div className="space-y-2">
+                      {menuData.lunchPower.map((item, i) => <BrutalistItem key={i} item={item} />)}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'cold' && (
+                <div className="animate-fade-in">
+                  <div className="mb-16">
+                    <SectionHeader title="CRUNCHY FRAPPÉS" />
+                    <div className="space-y-2">
+                      {menuData.crunchyFrappes.map((item, i) => <BrutalistItem key={i} item={item} />)}
+                    </div>
+                  </div>
+                  <div className="mb-16">
+                    <SectionHeader title="ICE BLENDED" />
+                    <div className="space-y-2">
+                      {menuData.coldDrinks.map((item, i) => <BrutalistItem key={i} item={item} />)}
+                    </div>
+                  </div>
+                  <div className="mb-16">
+                    <SectionHeader title="FRESH SMOOTHIES" />
+                    <div className="space-y-2">
+                      {menuData.smoothies.map((item, i) => <BrutalistItem key={i} item={item} />)}
+                    </div>
+                  </div>
+                  <div>
+                    <SectionHeader title="REFRESHMENTS" />
+                    <div className="space-y-2">
+                      {menuData.refreshments.map((item, i) => <BrutalistItem key={i} item={item} />)}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'sweets' && (
+                <div className="animate-fade-in">
+                  <div className="mb-16">
+                    <SectionHeader title="SWEET TREATS" />
+                    <div className="space-y-2">
+                      {menuData.sweetTreats.map((item, i) => <BrutalistItem key={i} item={item} />)}
+                    </div>
+                  </div>
+                  <div className="bg-secondary text-off-white p-8">
+                    <h3 className="text-3xl font-black mb-6 uppercase tracking-widest text-primary">Extras</h3>
+                    <div className="space-y-4 font-sans text-xl font-bold">
+                      <div className="flex justify-between border-b border-off-white/20 pb-4">
+                        <span>Nappage / Sirops</span>
+                        <span className="text-primary">+1,0 DT</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Crème Chantilly Royale</span>
+                        <span className="text-primary">+2,0 DT</span>
                       </div>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </Section>
+              )}
 
-              <Section title="7AJA HOT" emoji="🫖" items={menuData.hot} twoCols />
             </div>
-          )}
-
-          {/* Food Tab */}
-          {activeTab === 'food' && (
-            <div className="space-y-16 animate-fade-in">
-               <Section title="MORNING BOOST" emoji="🥞" items={menuData.morningBoost} twoCols />
-               <Section title="LUNCH POWER" emoji="🥪" items={menuData.lunchPower} twoCols />
-            </div>
-          )}
-
-          {/* Cold Tab */}
-          {activeTab === 'cold' && (
-            <div className="space-y-16 animate-fade-in">
-              <div className="grid grid-cols-2 gap-4 mb-12">
-                <img src={images.mojito} className="w-full h-64 object-cover rounded-2xl" alt="Mojito" />
-                <img src={images.coldBrew} className="w-full h-64 object-cover rounded-2xl" alt="Cold Brew" />
-              </div>
-
-              <Section title="LA FIKRA JDIDA" emoji="✨" items={menuData.crunchyFrappes} />
-              <Section title="7AJA BERDA" emoji="🧊" items={menuData.coldDrinks} twoCols />
-              <Section title="SMOOTHIES" emoji="🌿" items={menuData.smoothies} twoCols />
-              <Section title="FARSHEK JAWEK" emoji="🍊" items={menuData.refreshments} twoCols />
-            </div>
-          )}
-
-          {/* Sweets Tab */}
-          {activeTab === 'sweets' && (
-            <div className="space-y-16 animate-fade-in">
-               <Section title="7AJA 7LOWA" emoji="🍰" items={menuData.sweetTreats} twoCols />
-
-               <div className="bg-white p-6 rounded-2xl shadow-sm border border-accent-1">
-                 <h3 className="text-xl font-bold mb-4">➕ EXTRAS</h3>
-                 <div className="space-y-3">
-                   <div className="flex justify-between border-b border-gray-100 pb-2">
-                     <span>Nappage / Sirops (Caramel, Vanille, Chocolat, Cookies)</span>
-                     <span className="font-bold">+1,0 DT</span>
-                   </div>
-                   <div className="flex justify-between">
-                     <span>Crème Chantilly Royale</span>
-                     <span className="font-bold">+2,0 DT</span>
-                   </div>
-                 </div>
-               </div>
-            </div>
-          )}
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Location / Footer */}
-      <div id="location" className="bg-secondary text-white py-20 border-t-8 border-primary">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      {/* Brutalist Footer / Location */}
+      <footer id="location" className="bg-primary text-off-white relative overflow-hidden clip-diagonal pt-32 pb-12">
+        <div className="absolute top-0 right-0 p-12 opacity-10">
+          <img src={logos.black} alt="Goat" className="w-[600px] invert" />
+        </div>
+
+        <div className="px-6 md:px-16 max-w-7xl mx-auto relative z-10">
+          <div className="grid md:grid-cols-2 gap-16 mb-24">
             <div>
-              <img src={logos.white} alt="Cosmitto Logo" className="h-16 mb-8" />
-              <h2 className="text-3xl font-black mb-6">VISIT US AT LAC I</h2>
-              <div className="space-y-4 text-gray-300">
-                <p className="flex items-start gap-3">
-                  <span className="text-xl">📍</span>
-                  <span>R6MP+4GC, Rue du Lac Biwa, Tunis</span>
-                </p>
-                <p className="flex items-start gap-3">
-                  <span className="text-xl">📞</span>
-                  <span>71 862 842</span>
-                </p>
-                <p className="flex items-start gap-3">
-                  <span className="text-xl">🕒</span>
-                  <span>08:00 – 23:00 daily</span>
-                </p>
-              </div>
-
-              <div className="mt-8 flex gap-4">
-                <div className="bg-white/10 px-4 py-2 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-yellow-400">3.8★</div>
-                  <div className="text-xs text-gray-400">354 Reviews</div>
-                </div>
-                <div className="bg-white/10 px-4 py-2 rounded-lg text-center flex items-center justify-center">
-                  <span className="font-medium">10–20 DT / person</span>
-                </div>
+              <h2 className="text-5xl md:text-8xl font-black leading-none mb-8">LAC I.<br/>TUNIS.</h2>
+              <div className="font-sans font-bold text-xl md:text-2xl space-y-2 border-l-4 border-secondary pl-6">
+                <p>R6MP+4GC, Rue du Lac Biwa</p>
+                <p>71 862 842</p>
+                <p>08:00 – 23:00 DAILY</p>
               </div>
             </div>
 
-            <div className="bg-white/5 p-6 rounded-3xl">
-              <h3 className="text-xl font-bold mb-4 text-primary">What People Say</h3>
-              <div className="space-y-4">
-                <div className="bg-white/10 p-4 rounded-xl">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold">Syrine Baccouch</span>
-                    <span className="text-yellow-400">★★★★★</span>
-                  </div>
-                  <p className="text-sm text-gray-300 italic">"Good coffee and croissant, calm atmosphere and welcoming staff."</p>
+            <div className="bg-secondary p-8 transform rotate-1 hover:rotate-0 transition-transform">
+              <div className="flex items-center gap-4 border-b-2 border-off-white/20 pb-6 mb-6">
+                <div className="text-6xl font-black text-primary">3.8</div>
+                <div>
+                  <div className="text-2xl text-yellow-500 tracking-widest">★★★★☆</div>
+                  <div className="font-sans font-bold text-sm tracking-widest uppercase">Based on 354 Reviews</div>
                 </div>
-                <div className="bg-white/10 p-4 rounded-xl">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold">Jassim Alsaady</span>
-                    <span className="text-yellow-400">★★★★★</span>
-                  </div>
-                  <p className="text-sm text-gray-300 italic">"The atmosphere is fresh, clean, and inviting — perfect for working or relaxing. The best part? No smoking indoors..."</p>
-                </div>
+              </div>
+
+              <div className="space-y-6">
+                <blockquote className="italic font-medium text-lg text-off-white/80">
+                  "Good coffee and croissant, calm atmosphere and welcoming staff."
+                  <footer className="font-sans font-bold text-sm text-primary mt-2 uppercase">— Syrine B.</footer>
+                </blockquote>
+                <blockquote className="italic font-medium text-lg text-off-white/80">
+                  "The atmosphere is fresh, clean, and inviting..."
+                  <footer className="font-sans font-bold text-sm text-primary mt-2 uppercase">— Jassim A.</footer>
+                </blockquote>
               </div>
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-white/10 text-center text-gray-500 text-sm">
-            <p>© {new Date().getFullYear()} Cosmitto Coffee. All rights reserved.</p>
+          <div className="flex flex-col md:flex-row justify-between items-center border-t-2 border-off-white/20 pt-8 gap-6">
+            <img src={logos.white} alt="Cosmitto Logo" className="h-12" />
+            <p className="font-sans font-bold text-sm tracking-widest uppercase">
+              © {new Date().getFullYear()} COSMITTO COFFEE.
+            </p>
           </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
