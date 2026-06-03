@@ -1,0 +1,24 @@
+{
+  "name": "Cosmitto Coffee",
+  "short_name": "Cosmitto",
+  "description": "Specialty coffee, breakfast combos, signature frappes, pastries, and cosmic vibes in Tunis.",
+  "start_url": "https://cosmittocoffee.vercel.app/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#120d0e",
+  "theme_color": "#120d0e",
+  "icons": [
+    {
+      "src": "https://dropshare.42web.io/1/files/fNAZGrMhLH.png",
+      "sizes": "500x500",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/logo-white.png",
+      "sizes": "500x500",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
