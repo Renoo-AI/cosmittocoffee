@@ -45,7 +45,7 @@ a:focus-visible {
 
 .nav-stage,
 .mobile-nav-stage {
-  width: min(1180px, 100%);
+  width: min(980px, calc(100% - 32px));
   margin-inline: auto;
   pointer-events: auto;
 }
@@ -55,18 +55,20 @@ a:focus-visible {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 18px;
-  min-height: 68px;
-  padding: 10px 12px 10px 18px;
+  gap: 14px;
+  min-height: 58px;
+  padding: 8px 10px 8px 14px;
   overflow: hidden;
   border: 1px solid rgba(243, 238, 233, 0.24);
   background:
-    linear-gradient(135deg, rgba(18, 13, 14, 0.82), rgba(18, 13, 14, 0.58)),
-    rgba(18, 13, 14, 0.72);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(18px) saturate(1.16);
+    linear-gradient(135deg, rgba(18, 13, 14, 0.6), rgba(18, 13, 14, 0.38)),
+    rgba(18, 13, 14, 0.46);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px) saturate(1.08);
   transform: translate3d(0, 0, 0);
   transition:
+    height 240ms steps(4, end),
+    padding 240ms steps(4, end),
     min-height 360ms var(--ease-out),
     background-color 360ms var(--ease-out),
     border-color 360ms var(--ease-out),
@@ -74,12 +76,32 @@ a:focus-visible {
 }
 
 .site-nav.is-scrolled .nav-panel {
-  min-height: 62px;
-  border-color: rgba(230, 26, 35, 0.46);
+  min-height: 54px;
+  border-color: rgba(230, 26, 35, 0.36);
   background:
-    linear-gradient(135deg, rgba(18, 13, 14, 0.94), rgba(18, 13, 14, 0.76)),
-    rgba(18, 13, 14, 0.9);
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.32);
+    linear-gradient(135deg, rgba(18, 13, 14, 0.7), rgba(18, 13, 14, 0.46)),
+    rgba(18, 13, 14, 0.58);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+.site-nav.is-collapsed .nav-panel {
+  min-height: 10px;
+  height: 10px;
+  padding-block: 0;
+  border-color: rgba(243, 238, 233, 0.2);
+  background: rgba(18, 13, 14, 0.22);
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.site-nav.is-collapsed .nav-brand,
+.site-nav.is-collapsed .nav-links,
+.site-nav.is-collapsed .nav-cta,
+.site-nav.is-collapsed .nav-icon-button {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
 }
 
 .scroll-progress-bar {
@@ -100,6 +122,11 @@ a:focus-visible {
 .nav-link {
   position: relative;
   z-index: 1;
+  transition:
+    opacity 160ms steps(2, end),
+    transform 160ms steps(2, end),
+    color 160ms steps(2, end),
+    background-color 160ms steps(2, end);
 }
 
 .nav-brand {
@@ -381,17 +408,6 @@ a:focus-visible {
   }
 }
 
-@keyframes tap-ripple {
-  from {
-    opacity: 0.32;
-    transform: scale(0);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1);
-  }
-}
-
 @keyframes mobile-menu-in {
   from {
     opacity: 0;
@@ -527,30 +543,16 @@ body.motion-ready .reveal-right.is-settled {
 .delay-3 { --reveal-delay: 270ms; }
 
 .motion-card {
-  --magnet-x: 0px;
-  --magnet-y: 0px;
   transition:
-    transform 420ms var(--ease-out),
-    box-shadow 420ms var(--ease-out),
-    border-color 420ms var(--ease-out),
-    background-color 420ms var(--ease-out),
-    color 420ms var(--ease-out),
-    filter 420ms var(--ease-out);
-  transform: translate3d(var(--magnet-x), var(--magnet-y), 0);
-  will-change: transform;
-}
-
-.motion-card:focus-visible {
-  transform: translate3d(var(--magnet-x), -3px, 0);
+    box-shadow 120ms steps(2, end),
+    border-color 120ms steps(2, end),
+    background-color 120ms steps(2, end),
+    color 120ms steps(2, end),
+    filter 120ms steps(2, end);
 }
 
 .motion-card:hover {
-  transform: translate3d(var(--magnet-x), calc(var(--magnet-y) - 5px), 0);
-  filter: saturate(1.08);
-}
-
-.magnetic {
-  transform: translate3d(var(--magnet-x), var(--magnet-y), 0);
+  filter: contrast(1.08) saturate(1.02);
 }
 
 .logo-pop {
@@ -603,21 +605,6 @@ body.motion-ready .reveal-right.is-settled {
   border-color: #f3eee9;
 }
 
-.ripple-target {
-  position: relative;
-  overflow: hidden;
-}
-
-.tap-ripple {
-  position: absolute;
-  border-radius: 999px;
-  background: currentColor;
-  pointer-events: none;
-  transform: scale(0);
-  animation: tap-ripple 760ms var(--ease-out) forwards;
-  mix-blend-mode: screen;
-}
-
 .menu-page {
   background:
     linear-gradient(180deg, #120d0e 0 300px, #f3eee9 300px 100%),
@@ -658,13 +645,12 @@ body.motion-ready .reveal-right.is-settled {
   font-weight: 900;
   letter-spacing: 0.16em;
   border-bottom: 2px solid currentColor;
-  transition: color 260ms var(--ease-out), transform 260ms var(--ease-out);
+  transition: color 120ms steps(2, end);
 }
 
 .menu-back-link:hover,
 .menu-back-link:focus-visible {
   color: #f3eee9;
-  transform: translate3d(-3px, 0, 0);
 }
 
 .menu-eyebrow {
@@ -864,7 +850,7 @@ body.motion-ready .reveal-right.is-settled {
   scrollbar-width: none;
   scroll-padding-inline: 50%;
   padding-bottom: 14px;
-  mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 20px, #000 calc(100% - 20px), transparent);
 }
 
 .menu-tab-shell::-webkit-scrollbar {
@@ -876,7 +862,7 @@ body.motion-ready .reveal-right.is-settled {
   gap: 10px;
   width: max-content;
   min-width: 100%;
-  padding: 0 50%;
+  padding: 0;
 }
 
 .menu-tab {
@@ -900,26 +886,23 @@ body.motion-ready .reveal-right.is-settled {
   scroll-snap-align: center;
   box-shadow: 0 0 0 rgba(18, 13, 14, 0);
   transition:
-    transform 360ms var(--ease-out),
-    background-color 360ms var(--ease-out),
-    color 360ms var(--ease-out),
-    box-shadow 360ms var(--ease-out),
-    border-color 360ms var(--ease-out);
+    background-color 120ms steps(2, end),
+    color 120ms steps(2, end),
+    box-shadow 120ms steps(2, end),
+    border-color 120ms steps(2, end);
 }
 
 .menu-tab:hover,
 .menu-tab:focus-visible {
   background: #120d0e;
   color: #f3eee9;
-  transform: translate3d(0, -2px, 0);
 }
 
 .menu-tab.is-active {
   background: #e61a23;
   color: #f3eee9;
   border-color: #120d0e;
-  box-shadow: 0 8px 0 #120d0e;
-  transform: translate3d(0, -4px, 0);
+  box-shadow: inset 0 -6px 0 #120d0e;
 }
 
 .menu-tab-number {
@@ -936,26 +919,21 @@ body.motion-ready .reveal-right.is-settled {
 
 @media (min-width: 1024px) {
   .menu-nav-sticky {
-    top: 96px;
+    top: 74px;
   }
 
   .menu-tab-shell {
-    overflow-x: visible;
-    mask-image: none;
-    padding-bottom: 0;
+    padding-bottom: 12px;
   }
 
   .menu-tab-list {
-    width: 100%;
-    min-width: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: flex;
+    width: max-content;
+    min-width: 100%;
   }
 
   .menu-tab {
-    width: 100%;
-    min-width: 0;
+    min-width: 150px;
   }
 }
 
@@ -1069,6 +1047,7 @@ body.motion-ready .reveal-right.is-settled {
 
   .menu-tab-list {
     gap: 8px;
+    padding-inline: 50%;
   }
 
   .menu-tab {
@@ -1080,8 +1059,7 @@ body.motion-ready .reveal-right.is-settled {
   }
 
   .menu-tab.is-active {
-    box-shadow: 0 6px 0 #120d0e;
-    transform: translate3d(0, -3px, 0);
+    box-shadow: inset 0 -5px 0 #120d0e;
   }
 
   .menu-section-card {
@@ -1248,18 +1226,16 @@ body.motion-ready .reveal-right.is-settled {
 
   .motion-card {
     transition:
-      transform 220ms var(--ease-out),
-      box-shadow 220ms var(--ease-out),
-      border-color 220ms var(--ease-out),
-      background-color 220ms var(--ease-out),
-      color 220ms var(--ease-out),
-      filter 220ms var(--ease-out);
+      box-shadow 120ms steps(2, end),
+      border-color 120ms steps(2, end),
+      background-color 120ms steps(2, end),
+      color 120ms steps(2, end),
+      filter 120ms steps(2, end);
   }
 
   .motion-card:active,
   .mobile-tap:active {
-    transform: translate3d(0, 2px, 0) scale(0.975);
-    filter: saturate(1.12);
+    filter: contrast(1.12);
   }
 
   .logo-pop:active {

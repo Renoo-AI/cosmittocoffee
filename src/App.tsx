@@ -18,10 +18,10 @@ const HERO_POSTER_URL = 'https://images.unsplash.com/photo-1511920170033-f839692
 const PHONE_DISPLAY = '+216 55 046 609';
 const PHONE_HREF = 'tel:+21655046609';
 const SOCIAL_LINKS = [
-  { label: 'IG', name: 'Instagram', href: 'https://www.instagram.com/cosmittocoffee/' },
-  { label: 'FB', name: 'Facebook', href: 'https://www.facebook.com/cosmittotunisie' },
-  { label: 'YT', name: 'YouTube', href: 'https://www.youtube.com/watch?v=lgOHrDPXjqA&t=622s' },
-  { label: 'SP', name: 'Spotify', href: 'https://open.spotify.com/episode/7IzwU0Zl0pKx6KckGqngOl' },
+  { icon: 'instagram', name: 'Instagram', href: 'https://www.instagram.com/cosmittocoffee/' },
+  { icon: 'facebook', name: 'Facebook', href: 'https://www.facebook.com/cosmittotunisie' },
+  { icon: 'youtube', name: 'YouTube', href: 'https://www.youtube.com/watch?v=lgOHrDPXjqA&t=622s' },
+  { icon: 'spotify', name: 'Spotify', href: 'https://open.spotify.com/episode/7IzwU0Zl0pKx6KckGqngOl' },
 ];
 const LOCATIONS = [
   {
@@ -210,68 +210,6 @@ function useSilkyPageMotion(trigger: unknown) {
       root.style.removeProperty('--hero-overlay-opacity');
       root.style.removeProperty('--scroll-progress');
     };
-  }, [trigger]);
-}
-
-function useInteractionRipples(trigger: unknown) {
-  useEffect(() => {
-    if (prefersReducedMotion()) return;
-
-    const targets = Array.from(document.querySelectorAll<HTMLElement>('.ripple-target'));
-    const cleanup = targets.map((target) => {
-      const onPointerDown = (event: PointerEvent) => {
-        const rect = target.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height) * 1.35;
-        const ripple = document.createElement('span');
-        ripple.className = 'tap-ripple';
-        ripple.style.width = `${size}px`;
-        ripple.style.height = `${size}px`;
-        ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
-        ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
-        target.appendChild(ripple);
-        window.setTimeout(() => ripple.remove(), 760);
-      };
-
-      target.addEventListener('pointerdown', onPointerDown);
-
-      return () => target.removeEventListener('pointerdown', onPointerDown);
-    });
-
-    return () => cleanup.forEach((dispose) => dispose());
-  }, [trigger]);
-}
-
-function useMagneticMotion(trigger: unknown) {
-  useEffect(() => {
-    if (prefersReducedMotion() || window.matchMedia('(pointer: coarse)').matches) return;
-
-    const items = Array.from(document.querySelectorAll<HTMLElement>('.magnetic'));
-    const cleanup = items.map((item) => {
-      const strength = 10;
-
-      const move = (event: MouseEvent) => {
-        const rect = item.getBoundingClientRect();
-        const x = ((event.clientX - rect.left) / rect.width - 0.5) * strength;
-        const y = ((event.clientY - rect.top) / rect.height - 0.5) * strength;
-        item.style.setProperty('--magnet-x', `${x}px`);
-        item.style.setProperty('--magnet-y', `${y}px`);
-      };
-
-      const leave = () => {
-        item.style.setProperty('--magnet-x', '0px');
-        item.style.setProperty('--magnet-y', '0px');
-      };
-
-      item.addEventListener('mousemove', move);
-      item.addEventListener('mouseleave', leave);
-
-      return () => {
-        item.removeEventListener('mousemove', move);
-        item.removeEventListener('mouseleave', leave);
-      };
-    });
-
-    return () => cleanup.forEach((dispose) => dispose());
   }, [trigger]);
 }
 
@@ -548,16 +486,55 @@ function BrandLogo({
   );
 }
 
+function SocialIcon({ icon }: { icon: string }) {
+  if (icon === 'instagram') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="4" y="4" width="16" height="16" rx="5" />
+        <circle cx="12" cy="12" r="3.6" />
+        <circle cx="17" cy="7" r="0.9" fill="currentColor" stroke="none" />
+      </svg>
+    );
+  }
+
+  if (icon === 'facebook') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="currentColor">
+        <path d="M14.2 8.1h2.4V4.3c-.4-.1-1.9-.2-3.6-.2-3.5 0-5.9 2.1-5.9 6v3.3H3.4v4.3h3.7V24h4.6v-6.3h3.6l.6-4.3h-4.2v-2.9c0-1.2.4-2.4 2.5-2.4Z" />
+      </svg>
+    );
+  }
+
+  if (icon === 'youtube') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6" fill="currentColor">
+        <path d="M22 7.8a3 3 0 0 0-2.1-2.1C18 5.2 12 5.2 12 5.2s-6 0-7.9.5A3 3 0 0 0 2 7.8 31.4 31.4 0 0 0 1.5 12c0 1.4.1 2.8.5 4.2a3 3 0 0 0 2.1 2.1c1.9.5 7.9.5 7.9.5s6 0 7.9-.5a3 3 0 0 0 2.1-2.1c.4-1.4.5-2.8.5-4.2 0-1.4-.1-2.8-.5-4.2ZM10 15.2V8.8l5.5 3.2L10 15.2Z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="currentColor">
+      <path d="M12 1.8A10.2 10.2 0 1 0 12 22.2 10.2 10.2 0 0 0 12 1.8Zm4.7 14.7a.8.8 0 0 1-1.1.3c-3-1.8-6.7-2.2-11.1-1.2a.8.8 0 1 1-.4-1.6c4.8-1.1 8.9-.7 12.2 1.4.4.2.6.7.4 1.1Zm1.3-3a1 1 0 0 1-1.3.3c-3.4-2.1-8.5-2.7-12.5-1.5a1 1 0 1 1-.6-1.9c4.6-1.4 10.3-.7 14.1 1.7.5.3.6.9.3 1.4Zm.1-3.1C14.1 8 7.5 7.8 3.6 9a1.1 1.1 0 1 1-.6-2.1c4.5-1.4 11.7-1.1 16.4 1.7.5.4.7 1.1.4 1.6-.4.6-1.1.8-1.7.2Z" />
+    </svg>
+  );
+}
+
 // ============ NAVBAR ============
 function Navbar({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [peeked, setPeeked] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!scrolled) setPeeked(false);
+  }, [scrolled]);
 
   const links = [
     { label: 'STORY', anchor: 'story' },
@@ -567,8 +544,17 @@ function Navbar({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   ];
 
   return (
-    <nav className={`site-nav fixed top-0 left-0 right-0 z-50 ${scrolled ? 'is-scrolled' : ''}`}>
-      <div className="nav-stage">
+    <nav className={`site-nav fixed top-0 left-0 right-0 z-50 ${scrolled ? 'is-scrolled' : ''} ${scrolled && !open && !peeked ? 'is-collapsed' : ''} ${peeked ? 'is-peeked' : ''}`}>
+      <div
+        className="nav-stage"
+        onMouseEnter={() => setPeeked(true)}
+        onMouseLeave={() => setPeeked(false)}
+        onFocus={() => setPeeked(true)}
+        onBlur={() => setPeeked(false)}
+        onTouchStart={() => {
+          if (scrolled) setPeeked(true);
+        }}
+      >
         <div className="nav-panel">
           <div className="scroll-progress-bar" aria-hidden="true" />
           <button onClick={() => onNav('landing')} className="nav-brand mobile-tap" aria-label="Cosmitto home">
@@ -588,7 +574,7 @@ function Navbar({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
               MENU
             </button>
           </div>
-          <button onClick={() => onNav('menu')} className="ripple-target magnetic motion-card nav-cta">
+          <button onClick={() => onNav('menu')} className="mobile-tap nav-cta">
             VIEW MENU
           </button>
           <button className="nav-icon-button mobile-tap" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>
@@ -603,11 +589,11 @@ function Navbar({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         <div className="mobile-nav-stage">
           <div className="mobile-menu-panel">
             {links.map((l) => (
-              <button key={l.anchor} onClick={() => { setOpen(false); onNav('landing', l.anchor); }} className="ripple-target mobile-tap mobile-menu-link">
+              <button key={l.anchor} onClick={() => { setOpen(false); onNav('landing', l.anchor); }} className="mobile-tap mobile-menu-link">
                 {l.label}
               </button>
             ))}
-            <button onClick={() => { setOpen(false); onNav('menu'); }} className="ripple-target mobile-tap mobile-menu-link">
+            <button onClick={() => { setOpen(false); onNav('menu'); }} className="mobile-tap mobile-menu-link">
               MENU
             </button>
           </div>
@@ -625,41 +611,54 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [, setFailedVideos] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
-  const [warmupStarted, setWarmupStarted] = useState(false);
   const [videoArmed, setVideoArmed] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
   const currentVideoUrl = HERO_VIDEO_URLS[activeVideo];
   const currentVideoSrc = `${currentVideoUrl}?cosmitto=landing-bg-${activeVideo}`;
 
   useEffect(() => {
-    const startWarmup = () => setWarmupStarted(true);
-    const warmupTimer = window.setTimeout(startWarmup, 600);
-
-    if (document.readyState === 'complete') {
-      startWarmup();
-    } else {
-      window.addEventListener('load', startWarmup, { once: true });
-    }
-
-    return () => {
-      window.clearTimeout(warmupTimer);
-      window.removeEventListener('load', startWarmup);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!warmupStarted) return;
-    const videoTimer = window.setTimeout(() => setVideoArmed(true), 1200);
+    const videoTimer = window.setTimeout(() => setVideoArmed(true), 650);
     return () => window.clearTimeout(videoTimer);
-  }, [warmupStarted]);
+  }, []);
 
   useEffect(() => {
     setVideoLoaded(false);
     setVideoProgress(0);
-  }, [activeVideo]);
+    const video = videoRef.current;
+    if (!video) return;
+
+    document.querySelectorAll<HTMLMediaElement>('video, audio').forEach((media) => {
+      if (media === video) return;
+      media.pause();
+      media.muted = true;
+      media.volume = 0;
+    });
+
+    video.pause();
+    video.muted = !soundOn;
+    video.volume = soundOn ? 0.72 : 0;
+    video.currentTime = 0;
+    video.load();
+
+    const playPromise = video.play();
+    if (playPromise) {
+      playPromise.catch(() => {
+        video.muted = true;
+        video.volume = 0;
+        setSoundOn(false);
+        video.play().catch(() => undefined);
+      });
+    }
+  }, [activeVideo, currentVideoSrc]);
 
   useEffect(() => {
     if (!videoRef.current) return;
+    document.querySelectorAll<HTMLMediaElement>('video, audio').forEach((media) => {
+      if (media === videoRef.current) return;
+      media.pause();
+      media.muted = true;
+      media.volume = 0;
+    });
     videoRef.current.muted = !soundOn;
     videoRef.current.volume = soundOn ? 0.72 : 0;
   }, [soundOn, activeVideo]);
@@ -685,6 +684,12 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     setSoundOn(nextSoundOn);
 
     if (videoRef.current) {
+      document.querySelectorAll<HTMLMediaElement>('video, audio').forEach((media) => {
+        if (media === videoRef.current) return;
+        media.pause();
+        media.muted = true;
+        media.volume = 0;
+      });
       videoRef.current.muted = !nextSoundOn;
       videoRef.current.volume = nextSoundOn ? 0.72 : 0;
 
@@ -704,26 +709,11 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
   return (
     <section id="top" className="relative w-full h-screen min-h-[650px] overflow-hidden bg-[#120d0e]">
-      {warmupStarted && (
-        HERO_VIDEO_URLS.map((url) => (
-          <iframe
-            key={url}
-            src={url}
-            title="Cosmitto video warmup"
-            className="pointer-events-none absolute h-0 w-0 opacity-0"
-            aria-hidden="true"
-            loading="lazy"
-            tabIndex={-1}
-            onLoad={() => window.setTimeout(() => setVideoArmed(true), 250)}
-          />
-        ))
-      )}
-
       {/* Video layer */}
       {videoArmed && !videoError ? (
         <video
           ref={videoRef}
-          key={currentVideoSrc}
+          src={currentVideoSrc}
           className={`hero-media absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
           autoPlay
           muted={!soundOn}
@@ -736,9 +726,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
           onEnded={goToNextVideo}
           onError={handleVideoError}
           poster={HERO_POSTER_URL}
-        >
-          <source src={currentVideoSrc} type="video/mp4" />
-        </video>
+        />
       ) : (
         <img
           src={HERO_POSTER_URL}
@@ -824,10 +812,10 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
           Coffee - Culture - Cosmic Vibes. A specialty coffee house brewed bold, served loud.
         </p>
         <div className="hero-enter hero-enter-delay-3 mt-10 flex flex-col sm:flex-row gap-4">
-          <button onClick={() => onNav('menu')} className="ripple-target mobile-tap magnetic motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#f3eee9] transition-colors">
-            VIEW FULL MENU →
+          <button onClick={() => onNav('menu')} className="mobile-tap motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#f3eee9] transition-colors">
+            VIEW FULL MENU
           </button>
-          <button onClick={() => onNav('landing', 'story')} className="ripple-target mobile-tap magnetic motion-card bg-transparent text-[#f3eee9] hover:bg-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#f3eee9] transition-colors">
+          <button onClick={() => onNav('landing', 'story')} className="mobile-tap motion-card bg-transparent text-[#f3eee9] hover:bg-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#f3eee9] transition-colors">
             OUR STORY
           </button>
         </div>
@@ -937,13 +925,13 @@ function CategoryGrid({ onNav }: { onNav: (page: Page, anchor?: string) => void 
               <span className="text-[#e61a23]">VIBE.</span>
             </h2>
           </div>
-          <button onClick={() => onNav('menu')} className="ripple-target mobile-tap motion-card text-[#f3eee9] hover:text-[#e61a23] font-black tracking-widest text-sm md:text-base border-b-2 border-current pb-1">
-            SEE FULL MENU →
+          <button onClick={() => onNav('menu')} className="mobile-tap motion-card text-[#f3eee9] hover:text-[#e61a23] font-black tracking-widest text-sm md:text-base border-b-2 border-current pb-1">
+            SEE FULL MENU
           </button>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {cats.map((c) => (
-            <button key={c.id} onClick={() => onNav('menu')} className="ripple-target mobile-tap reveal-up motion-card group relative overflow-hidden border-4 border-[#f3eee9] text-left">
+            <button key={c.id} onClick={() => onNav('menu')} className="mobile-tap reveal-up motion-card group relative overflow-hidden border-4 border-[#f3eee9] text-left">
               <img src={c.img} alt={c.title} className="w-full h-64 md:h-80 object-cover group-hover:scale-110 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#120d0e]/90 via-[#120d0e]/20 to-transparent" />
               <div className="absolute top-4 left-4">
@@ -978,29 +966,29 @@ function HappyHour({ onNav }: { onNav: (page: Page, anchor?: string) => void }) 
           Two options. One cosmic deal. Pick your poison.
         </p>
         <div className="grid md:grid-cols-2 gap-6 mt-12 max-w-4xl mx-auto">
-          <div className="ripple-target motion-card bg-[#f3eee9] text-[#120d0e] p-8 md:p-12 border-4 border-[#120d0e] text-left">
+          <div className="motion-card bg-[#f3eee9] text-[#120d0e] p-8 md:p-12 border-4 border-[#120d0e] text-left">
             <div className="text-[#e61a23] font-display text-7xl mb-4">01</div>
             <h3 className="font-display text-4xl md:text-5xl mb-4">OPTION COLD</h3>
             <p className="text-lg">1 Boisson Froide au choix</p>
             <div className="mt-6 pt-6 border-t-4 border-dashed border-[#120d0e]">
               <span className="bg-[#e61a23] text-[#f3eee9] px-4 py-2 font-black tracking-widest inline-block rotate-[-3deg] border-2 border-[#120d0e]">
-                → 1 COOKIE OFFERT !
+                1 COOKIE OFFERT !
               </span>
             </div>
           </div>
-          <div className="ripple-target motion-card bg-[#120d0e] text-[#f3eee9] p-8 md:p-12 border-4 border-[#f3eee9] text-left">
+          <div className="motion-card bg-[#120d0e] text-[#f3eee9] p-8 md:p-12 border-4 border-[#f3eee9] text-left">
             <div className="text-[#e61a23] font-display text-7xl mb-4">02</div>
             <h3 className="font-display text-4xl md:text-5xl mb-4">OPTION SWEET</h3>
             <p className="text-lg">1 Patisserie au choix</p>
             <div className="mt-6 pt-6 border-t-4 border-dashed border-[#f3eee9]">
               <span className="bg-[#e61a23] text-[#f3eee9] px-4 py-2 font-black tracking-widest inline-block rotate-[3deg] border-2 border-[#f3eee9]">
-                → 1 CAFE OFFERT !
+                1 CAFE OFFERT !
               </span>
             </div>
           </div>
         </div>
-        <button onClick={() => onNav('menu')} className="ripple-target mobile-tap motion-card mt-12 bg-[#120d0e] text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#120d0e] transition-colors">
-          EXPLORE FULL MENU →
+        <button onClick={() => onNav('menu')} className="mobile-tap motion-card mt-12 bg-[#120d0e] text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#120d0e] transition-colors">
+          EXPLORE FULL MENU
         </button>
       </div>
     </section>
@@ -1033,7 +1021,7 @@ function Reviews() {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
-            <div key={i} className={`ripple-target reveal-up motion-card text-[#f3eee9] p-8 border-4 border-[#120d0e] ${i % 2 ? 'bg-[#e61a23]' : 'bg-[#120d0e]'}`}>
+            <div key={i} className={`reveal-up motion-card text-[#f3eee9] p-8 border-4 border-[#120d0e] ${i % 2 ? 'bg-[#e61a23]' : 'bg-[#120d0e]'}`}>
               <div className="flex items-center justify-between mb-4">
                 <span className="font-display text-2xl">{r.name}</span>
                 <span className="bg-[#f3eee9] text-[#120d0e] px-3 py-1 text-xs font-black border-2 border-[#120d0e]">
@@ -1041,7 +1029,7 @@ function Reviews() {
                 </span>
               </div>
               <p className="text-base leading-relaxed mb-4">{r.text}</p>
-              <div className="text-xs tracking-widest font-bold opacity-80">-- {r.when}</div>
+              <div className="text-xs tracking-widest font-bold opacity-80">{r.when}</div>
             </div>
           ))}
         </div>
@@ -1082,7 +1070,7 @@ function Visit() {
         <div className="reveal-right md:col-span-7">
           <div className="motion-card border-4 border-[#f3eee9] bg-[#e61a23] text-[#f3eee9] p-4 rotate-[-2deg] min-h-[500px]">
             <div className="bg-[#120d0e] w-full h-full min-h-[470px] flex flex-col">
-              <img src="https://images.unsplash.com/photo-1554118811-1e0d593a69a8?q=80&w=900&auto=format&fit=crop" alt="interior" className="w-full h-64 object-cover" />
+              <img src="https://dropshare.42web.io/1/files/lhGzHp0cK5.png" alt="Cosmitto interior" className="w-full h-64 object-cover" />
               <div className="p-6 flex-1">
                 <div className="font-display text-3xl mb-4">COSMITTO COFFEE LAC I</div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
@@ -1104,7 +1092,7 @@ function Visit() {
                   href={LOCATIONS[1].url}
                   target="_blank"
                   rel="noreferrer"
-                  className="ripple-target mobile-tap mt-6 inline-flex border-2 border-[#f3eee9] px-4 py-3 text-xs font-black tracking-[0.18em] hover:bg-[#f3eee9] hover:text-[#120d0e] transition-colors"
+                  className="mobile-tap mt-6 inline-flex border-2 border-[#f3eee9] px-4 py-3 text-xs font-black tracking-[0.18em] hover:bg-[#f3eee9] hover:text-[#120d0e] transition-colors"
                 >
                   OPEN MAP
                 </a>
@@ -1119,7 +1107,7 @@ function Visit() {
             <div className="text-xs font-black tracking-[0.3em] text-[#e61a23] mb-2">ALL LOCATIONS</div>
             <h3 className="font-display text-4xl md:text-6xl leading-none">FIND COSMITTO.</h3>
           </div>
-          <a href={PHONE_HREF} className="ripple-target mobile-tap border-2 border-[#e61a23] px-5 py-3 text-sm font-black tracking-[0.16em] text-[#e61a23] hover:bg-[#e61a23] hover:text-[#f3eee9] transition-colors">
+          <a href={PHONE_HREF} className="mobile-tap border-2 border-[#e61a23] px-5 py-3 text-sm font-black tracking-[0.16em] text-[#e61a23] hover:bg-[#e61a23] hover:text-[#f3eee9] transition-colors">
             CALL {PHONE_DISPLAY}
           </a>
         </div>
@@ -1180,7 +1168,7 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
                   aria-label={social.name}
                   className="w-12 h-12 bg-[#120d0e] border-2 border-[#f3eee9] flex items-center justify-center font-black text-lg hover:bg-[#f3eee9] hover:text-[#120d0e] transition-colors"
                 >
-                  {social.label}
+                  <SocialIcon icon={social.icon} />
                 </a>
               ))}
             </div>
@@ -1254,7 +1242,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         <div className="menu-shell">
           <div className="menu-hero-panel hero-enter">
             <button onClick={() => onNav('landing')} className="menu-back-link">
-            ← BACK TO HOME
+            BACK TO HOME
             </button>
             <div className="mb-8 flex justify-center">
               <BrandLogo
@@ -1295,7 +1283,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
                       setActive(s.id);
                       smoothScrollToElement(s.id);
                     }}
-                    className={`menu-tab ripple-target mobile-tap ${
+                    className={`menu-tab mobile-tap ${
                       active === s.id ? 'is-active' : ''
                     }`}
                     aria-current={active === s.id ? 'true' : undefined}
@@ -1366,8 +1354,8 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
           </div>
 
           <div className="menu-bottom-action">
-            <button onClick={() => { onNav('landing'); window.scrollTo({ top: 0 }); }} className="menu-home-button ripple-target mobile-tap motion-card">
-              ← BACK TO HOME
+            <button onClick={() => { onNav('landing'); window.scrollTo({ top: 0 }); }} className="menu-home-button mobile-tap motion-card">
+              BACK TO HOME
             </button>
           </div>
         </div>
@@ -1399,8 +1387,6 @@ function App() {
   const introReady = useIntroReady();
 
   useSilkyPageMotion(page);
-  useMagneticMotion(page);
-  useInteractionRipples(page);
 
   const handleNav = (p: Page, anchor?: string) => {
     setPage(p);
