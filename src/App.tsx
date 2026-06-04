@@ -4,12 +4,11 @@ import type { CSSProperties } from 'react';
 type Page = 'landing' | 'menu' | 'notFound';
 type MotionStyle = CSSProperties & Record<string, string | number>;
 
-const HERO_VIDEO_SOURCES = [
-  ['/assets/videos/7eY39CTSbg.mp4', 'https://dropshare.42web.io/1/files/7eY39CTSbg.mp4'],
-  ['/assets/videos/9asN6BXde2.mp4', 'https://dropshare.42web.io/1/files/9asN6BXde2.mp4'],
-  ['/assets/videos/fVkU7Q4oSP.mp4', 'https://dropshare.42web.io/1/files/fVkU7Q4oSP.mp4'],
+const HERO_VIDEO_URLS = [
+  'https://dropshare.42web.io/1/files/fVkU7Q4oSP.mp4',
+  'https://dropshare.42web.io/1/files/9asN6BXde2.mp4',
+  'https://dropshare.42web.io/1/files/7eY39CTSbg.mp4',
 ];
-const HERO_VIDEO_URLS = HERO_VIDEO_SOURCES.map(([localUrl]) => localUrl);
 const LOGO_URLS = {
   black: '/assets/logo-black.png',
   red: '/assets/logo-red.png',
@@ -628,7 +627,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [videoArmed, setVideoArmed] = useState(false);
   const [needsVideoTap, setNeedsVideoTap] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
-  const currentVideoSources = HERO_VIDEO_SOURCES[activeVideo];
+  const currentVideoUrl = HERO_VIDEO_URLS[activeVideo];
 
   useEffect(() => {
     const videoTimer = window.setTimeout(() => setVideoArmed(true), 650);
@@ -756,6 +755,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       {videoArmed && !videoError ? (
         <video
           ref={videoRef}
+          src={currentVideoUrl}
           className={`hero-media absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
           autoPlay
           muted={!soundOn}
@@ -773,11 +773,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
           onEnded={goToNextVideo}
           onError={handleVideoError}
           poster={HERO_POSTER_URL}
-        >
-          {currentVideoSources.map((source) => (
-            <source key={source} src={source} type="video/mp4" />
-          ))}
-        </video>
+        />
       ) : (
         <img
           src={HERO_POSTER_URL}
