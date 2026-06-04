@@ -1090,6 +1090,7 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 // ============ MENU PAGE ============
 function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [active, setActive] = useState('morning');
+  const menuTabListRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -1108,6 +1109,17 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     });
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    const activeTab = menuTabListRef.current?.querySelector<HTMLAnchorElement>(`[data-menu-tab="${active}"]`);
+    if (!activeTab) return;
+
+    activeTab.scrollIntoView({
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      block: 'nearest',
+      inline: 'center',
+    });
+  }, [active]);
 
   return (
     <div className="min-h-screen bg-[#f3eee9] text-[#120d0e] pt-24">
@@ -1144,21 +1156,24 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       <section className="relative py-16 md:py-20">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="sticky top-20 z-30 mb-12">
-            <div className="overflow-x-auto pb-4 -mx-4 px-4">
-              <div className="flex gap-2 min-w-max">
+            <div className="menu-tab-shell -mx-4 px-4 pb-4 md:mx-0 md:px-0">
+              <div ref={menuTabListRef} className="menu-tab-list">
                 {MENU.map((s) => (
                   <a
                     key={s.id}
+                    data-menu-tab={s.id}
                     href={`#${s.id}`}
                     onClick={(event) => {
                       event.preventDefault();
                       setActive(s.id);
                       smoothScrollToElement(s.id);
                     }}
-                    className={`ripple-target mobile-tap motion-card px-5 py-3 border-2 border-[#120d0e] font-black tracking-widest text-sm whitespace-nowrap transition-colors ${
-                      active === s.id ? 'bg-[#e61a23] text-[#f3eee9]' : 'bg-[#f3eee9] text-[#120d0e] hover:bg-[#120d0e] hover:text-[#f3eee9]'
+                    className={`menu-tab ripple-target mobile-tap ${
+                      active === s.id ? 'is-active' : ''
                     }`}
+                    aria-current={active === s.id ? 'true' : undefined}
                   >
+                    <span className="menu-tab-number">{s.tag}</span>
                     {s.label}
                   </a>
                 ))}

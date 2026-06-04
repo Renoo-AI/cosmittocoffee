@@ -501,6 +501,100 @@ body.motion-ready .reveal-right.is-settled {
   mix-blend-mode: screen;
 }
 
+.menu-tab-shell {
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-padding-inline: 50%;
+  mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+}
+
+.menu-tab-shell::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-tab-list {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  min-width: 100%;
+  padding: 0 50%;
+}
+
+.menu-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 176px;
+  height: 52px;
+  padding: 0 18px;
+  border: 2px solid #120d0e;
+  background: rgba(243, 238, 233, 0.94);
+  color: #120d0e;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  scroll-snap-align: center;
+  box-shadow: 0 0 0 rgba(18, 13, 14, 0);
+  transition:
+    transform 360ms var(--ease-out),
+    background-color 360ms var(--ease-out),
+    color 360ms var(--ease-out),
+    box-shadow 360ms var(--ease-out),
+    border-color 360ms var(--ease-out);
+}
+
+.menu-tab:hover,
+.menu-tab:focus-visible {
+  background: #120d0e;
+  color: #f3eee9;
+  transform: translate3d(0, -2px, 0);
+}
+
+.menu-tab.is-active {
+  background: #e61a23;
+  color: #f3eee9;
+  border-color: #120d0e;
+  box-shadow: 0 8px 0 #120d0e;
+  transform: translate3d(0, -4px, 0);
+}
+
+.menu-tab-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+  border: 1px solid currentColor;
+  font-family: 'Anton', 'Bebas Neue', 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0;
+}
+
+@media (min-width: 1024px) {
+  .menu-tab-shell {
+    overflow-x: visible;
+    mask-image: none;
+  }
+
+  .menu-tab-list {
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .menu-tab {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
 .mobile-menu-panel > * {
   animation: mobile-menu-item-in 520ms var(--ease-out) both;
 }
