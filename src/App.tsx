@@ -4,11 +4,12 @@ import type { CSSProperties } from 'react';
 type Page = 'landing' | 'menu' | 'notFound';
 type MotionStyle = CSSProperties & Record<string, string | number>;
 
-const HERO_VIDEO_URLS = [
-  'https://dropshare.42web.io/1/files/7eY39CTSbg.mp4',
-  'https://dropshare.42web.io/1/files/9asN6BXde2.mp4',
-  'https://dropshare.42web.io/1/files/fVkU7Q4oSP.mp4',
+const HERO_VIDEO_SOURCES = [
+  ['/assets/videos/7eY39CTSbg.mp4', 'https://dropshare.42web.io/1/files/7eY39CTSbg.mp4'],
+  ['/assets/videos/9asN6BXde2.mp4', 'https://dropshare.42web.io/1/files/9asN6BXde2.mp4'],
+  ['/assets/videos/fVkU7Q4oSP.mp4', 'https://dropshare.42web.io/1/files/fVkU7Q4oSP.mp4'],
 ];
+const HERO_VIDEO_URLS = HERO_VIDEO_SOURCES.map(([localUrl]) => localUrl);
 const LOGO_URLS = {
   black: '/assets/logo-black.png',
   red: '/assets/logo-red.png',
@@ -625,9 +626,9 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [, setFailedVideos] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
   const [videoArmed, setVideoArmed] = useState(false);
+  const [needsVideoTap, setNeedsVideoTap] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
-  const currentVideoUrl = HERO_VIDEO_URLS[activeVideo];
-  const currentVideoSrc = `${currentVideoUrl}?cosmitto=landing-bg-${activeVideo}`;
+  const currentVideoSources = HERO_VIDEO_SOURCES[activeVideo];
 
   useEffect(() => {
     const videoTimer = window.setTimeout(() => setVideoArmed(true), 650);
@@ -636,7 +637,9 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
   useEffect(() => {
     setVideoLoaded(false);
+    setNeedsVideoTap(false);
     setVideoProgress(0);
+    if (!videoArmed) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -659,10 +662,10 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         video.muted = true;
         video.volume = 0;
         setSoundOn(false);
-        video.play().catch(() => undefined);
+        video.play().catch(() => setNeedsVideoTap(true));
       });
     }
-  }, [activeVideo, currentVideoSrc]);
+  }, [activeVideo, videoArmed]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -708,9 +711,36 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
       try {
         await videoRef.current.play();
+        setNeedsVideoTap(false);
       } catch {
         setSoundOn(false);
+        setNeedsVideoTap(true);
       }
+    }
+  };
+
+  const startVideoFromTap = async () => {
+    setVideoArmed(true);
+    const video = videoRef.current;
+    if (!video) return;
+
+    document.querySelectorAll<HTMLMediaElement>('video, audio').forEach((media) => {
+      if (media === video) return;
+      media.pause();
+      media.muted = true;
+      media.volume = 0;
+    });
+
+    video.muted = true;
+    video.volume = 0;
+    setSoundOn(false);
+
+    try {
+      await video.play();
+      setNeedsVideoTap(false);
+      setVideoLoaded(true);
+    } catch {
+      setNeedsVideoTap(true);
     }
   };
 
@@ -726,20 +756,28 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       {videoArmed && !videoError ? (
         <video
           ref={videoRef}
-          src={currentVideoSrc}
           className={`hero-media absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
           autoPlay
           muted={!soundOn}
+          loop={false}
           playsInline
+          controls={false}
           preload="auto"
           onLoadedData={() => setVideoLoaded(true)}
           onCanPlay={() => setVideoLoaded(true)}
-          onPlaying={() => setVideoLoaded(true)}
+          onPlaying={() => {
+            setVideoLoaded(true);
+            setNeedsVideoTap(false);
+          }}
           onTimeUpdate={updateVideoProgress}
           onEnded={goToNextVideo}
           onError={handleVideoError}
           poster={HERO_POSTER_URL}
-        />
+        >
+          {currentVideoSources.map((source) => (
+            <source key={source} src={source} type="video/mp4" />
+          ))}
+        </video>
       ) : (
         <img
           src={HERO_POSTER_URL}
@@ -757,6 +795,15 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       />
 
       <div className="absolute inset-0 hero-overlay" />
+
+      {videoArmed && !videoLoaded && !videoError && needsVideoTap && (
+        <button
+          onClick={startVideoFromTap}
+          className="mobile-tap absolute left-1/2 top-[58%] z-30 -translate-x-1/2 border-2 border-[#f3eee9] bg-[#e61a23] px-5 py-3 text-xs font-black tracking-[0.18em] text-[#f3eee9] transition-colors hover:bg-[#f3eee9] hover:text-[#120d0e]"
+        >
+          PLAY VIDEO
+        </button>
+      )}
 
       {videoArmed && !videoError && (
         <button
