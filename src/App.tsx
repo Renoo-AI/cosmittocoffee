@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 
-type Page = 'landing' | 'menu';
+type Page = 'landing' | 'menu' | 'notFound';
 type MotionStyle = CSSProperties & Record<string, string | number>;
 
 const HERO_VIDEO_URLS = [
@@ -87,6 +87,19 @@ const LOCATIONS = [
 ];
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const getPageFromPath = (path: string): Page => {
+  const normalized = path.replace(/\/+$/, '') || '/';
+  if (normalized === '/') return 'landing';
+  if (normalized === '/menu') return 'menu';
+  return 'notFound';
+};
+
+const getPathForPage = (page: Page) => {
+  if (page === 'menu') return '/menu';
+  if (page === 'notFound') return '/404';
+  return '/';
+};
 
 const easeOutQuint = (t: number) => 1 - Math.pow(1 - t, 5);
 let activeScrollFrame: number | null = null;
@@ -1380,21 +1393,71 @@ function LandingPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }
   );
 }
 
+function NotFoundPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
+  return (
+    <section className="min-h-screen bg-[#120d0e] text-[#f3eee9] pt-28 pb-16 flex items-center">
+      <div className="max-w-[1180px] mx-auto px-4 md:px-8 w-full">
+        <div className="reveal-up border-2 border-[#f3eee9] bg-[#120d0e] p-8 md:p-14">
+          <div className="text-[#e61a23] font-black tracking-[0.3em] text-sm mb-5">404 / LOST IN ORBIT</div>
+          <h1 className="font-display text-7xl md:text-[10rem] leading-[0.82]">
+            PAGE<br />
+            <span className="text-[#e61a23]">NOT FOUND.</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg md:text-xl text-[#f3eee9]/80 leading-relaxed">
+            This page is not on the Cosmitto map. Go back home or jump straight to the full menu.
+          </p>
+          <div className="mt-10 flex flex-col sm:flex-row gap-4">
+            <button onClick={() => onNav('landing')} className="mobile-tap motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#f3eee9] transition-colors">
+              BACK HOME
+            </button>
+            <button onClick={() => onNav('menu')} className="mobile-tap motion-card bg-transparent text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#f3eee9] transition-colors">
+              VIEW MENU
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ============ APP ============
 function App() {
-  const [page, setPage] = useState<Page>('landing');
-  const [pendingAnchor, setPendingAnchor] = useState<string | null>(null);
+  const [page, setPage] = useState<Page>(() => getPageFromPath(window.location.pathname));
+  const [pendingAnchor, setPendingAnchor] = useState<string | null>(() => window.location.hash.replace('#', '') || null);
   const introReady = useIntroReady();
 
   useSilkyPageMotion(page);
 
-  const handleNav = (p: Page, anchor?: string) => {
+  const handleNav = (p: Page, anchor?: string, replace = false) => {
     setPage(p);
     setPendingAnchor(anchor ?? null);
+
+    const path = `${getPathForPage(p)}${anchor ? `#${anchor}` : ''}`;
+    if (`${window.location.pathname}${window.location.hash}` !== path) {
+      const method = replace ? 'replaceState' : 'pushState';
+      window.history[method]({ page: p, anchor: anchor ?? null }, '', path);
+    }
+
     if (!anchor) {
       smoothScrollToY(0);
     }
   };
+
+  useEffect(() => {
+    if (page === 'notFound' && window.location.pathname !== '/404') {
+      window.history.replaceState({ page: 'notFound' }, '', '/404');
+    }
+  }, [page]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      setPage(getPageFromPath(window.location.pathname));
+      setPendingAnchor(window.location.hash.replace('#', '') || null);
+    };
+
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   useEffect(() => {
     if (!pendingAnchor) return;
@@ -1410,7 +1473,9 @@ function App() {
       <IntroCurtain ready={introReady} />
       <Navbar onNav={handleNav} />
       <main key={page} className="page-shell">
-        {page === 'landing' ? <LandingPage onNav={handleNav} /> : <MenuPage onNav={handleNav} />}
+        {page === 'landing' && <LandingPage onNav={handleNav} />}
+        {page === 'menu' && <MenuPage onNav={handleNav} />}
+        {page === 'notFound' && <NotFoundPage onNav={handleNav} />}
       </main>
     </div>
   );
