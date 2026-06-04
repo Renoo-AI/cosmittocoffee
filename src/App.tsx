@@ -1126,41 +1126,42 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   }, [active]);
 
   return (
-    <div className="min-h-screen bg-[#f3eee9] text-[#120d0e] pt-24">
+    <div className="menu-page min-h-screen text-[#120d0e] pt-24">
       {/* Menu hero */}
-      <section className="relative bg-[#120d0e] text-[#f3eee9] py-16 md:py-24 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-[#e61a23]/30 blur-3xl" />
-        <div className="hero-enter relative max-w-[1400px] mx-auto px-4 md:px-8 text-center">
-          <button onClick={() => onNav('landing')} className="text-[#e61a23] hover:text-[#f3eee9] font-black tracking-widest text-sm mb-6 border-b-2 border-[#e61a23] pb-1">
+      <section className="menu-hero">
+        <div className="menu-shell">
+          <div className="menu-hero-panel hero-enter">
+            <button onClick={() => onNav('landing')} className="menu-back-link">
             ← BACK TO HOME
-          </button>
-          <div className="mb-8 flex justify-center">
-            <BrandLogo
-              tone="white"
-              className="h-14 md:h-20 w-auto max-w-[300px] object-contain"
-              fallbackClassName="text-[#f3eee9] font-black tracking-widest text-3xl md:text-5xl font-display"
-            />
+            </button>
+            <div className="mb-8 flex justify-center">
+              <BrandLogo
+                tone="white"
+                className="h-14 md:h-20 w-auto max-w-[300px] object-contain"
+                fallbackClassName="text-[#f3eee9] font-black tracking-widest text-3xl md:text-5xl font-display"
+              />
+            </div>
+            <div className="menu-eyebrow">
+              <span />
+              <span>THE FULL MENU</span>
+              <span />
+            </div>
+            <h1 className="font-display text-6xl md:text-9xl leading-none">
+              EAT - DRINK - <span className="text-[#e61a23]">REPEAT.</span>
+            </h1>
+            <p className="menu-hero-copy">
+              Specialty coffee, signature frappes, breakfast combos and cosmic desserts.
+              All prices in Tunisian Dinars (DT).
+            </p>
           </div>
-          <div className="flex items-center justify-center gap-3 text-[#e61a23] text-sm tracking-[0.3em] font-black mb-4">
-            <span className="h-px w-12 bg-[#e61a23]" />
-            <span>THE FULL MENU</span>
-            <span className="h-px w-12 bg-[#e61a23]" />
-          </div>
-          <h1 className="font-display text-6xl md:text-9xl leading-none">
-            EAT - DRINK - <span className="text-[#e61a23]">REPEAT.</span>
-          </h1>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl mt-6 text-[#f3eee9]/80">
-            Specialty coffee, signature frappes, breakfast combos and cosmic desserts.
-            All prices in Tunisian Dinars (DT).
-          </p>
         </div>
       </section>
 
       {/* Sticky nav + items */}
-      <section className="relative py-16 md:py-20">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
-          <div className="sticky top-20 z-30 mb-12">
-            <div className="menu-tab-shell -mx-4 px-4 pb-4 md:mx-0 md:px-0">
+      <section className="menu-content-section">
+        <div className="menu-shell">
+          <div className="menu-nav-sticky sticky top-20 z-30">
+            <div className="menu-tab-shell">
               <div ref={menuTabListRef} className="menu-tab-list">
                 {MENU.map((s) => (
                   <a
@@ -1185,38 +1186,38 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
             </div>
           </div>
 
-          <div className="space-y-24">
+          <div className="menu-sections">
             {MENU.map((section) => (
-              <div id={section.id} key={section.id} className="reveal-up scroll-mt-32">
-                <div className="border-b-4 border-t-4 border-[#120d0e] py-6 mb-10 flex items-end justify-between flex-wrap gap-4">
+              <article id={section.id} key={section.id} className="menu-section-card reveal-up scroll-mt-32">
+                <div className="menu-section-header">
                   <div>
-                    <span className="font-display text-[#e61a23] text-2xl">N {section.tag}</span>
-                    <h3 className="font-display text-5xl md:text-7xl leading-none">{section.label}</h3>
+                    <span className="menu-section-tag">N {section.tag}</span>
+                    <h3 className="menu-section-title font-display">{section.label}</h3>
                     {section.subtitle && (
-                      <p className="text-sm md:text-base mt-2 text-[#120d0e]/70 font-medium">{section.subtitle}</p>
+                      <p className="menu-section-subtitle">{section.subtitle}</p>
                     )}
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
+                <div className="menu-items-grid">
                   {section.items.map((item, i) => (
-                    <div key={i} className="motion-card border-b-2 border-dashed border-[#120d0e] pb-6">
-                      <div className="flex items-baseline justify-between gap-4 mb-2">
-                        <h4 className="font-display text-2xl md:text-3xl text-[#120d0e]">{item.name}</h4>
+                    <div key={i} className="menu-item-row motion-card">
+                      <div className="menu-item-top">
+                        <h4 className="menu-item-name font-display">{item.name}</h4>
                         {item.price && (
-                          <span className="text-[#e61a23] font-display text-2xl font-black whitespace-nowrap">{item.price}</span>
+                          <span className="menu-price font-display">{item.price}</span>
                         )}
                       </div>
                       {item.composition && (
-                        <p className="text-[#120d0e]/75 text-sm md:text-base italic">{item.composition}</p>
+                        <p className="menu-item-meta italic">{item.composition}</p>
                       )}
                       {item.desc && (
-                        <p className="text-[#120d0e]/75 text-sm md:text-base">{item.desc}</p>
+                        <p className="menu-item-meta">{item.desc}</p>
                       )}
                       {item.prices && (
-                        <div className="mt-3 flex flex-wrap gap-2">
+                        <div className="menu-price-options">
                           {item.prices.map((p) => (
-                            <span key={p.label} className="text-xs md:text-sm font-bold tracking-wider bg-[#120d0e] text-[#f3eee9] px-3 py-1 border border-[#120d0e]">
+                            <span key={p.label}>
                               {p.label} - {p.price}
                             </span>
                           ))}
@@ -1225,16 +1226,16 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
                     </div>
                   ))}
                 </div>
-              </div>
+              </article>
             ))}
           </div>
 
-          <div className="reveal-up motion-card mt-20 bg-[#120d0e] text-[#f3eee9] p-8 md:p-12 border-4 border-[#e61a23]">
-            <div className="grid md:grid-cols-3 gap-8 items-center">
+          <div className="menu-note-panel reveal-up motion-card">
+            <div className="menu-note-grid">
               <div className="font-display text-3xl md:text-4xl">
                 <span className="text-[#e61a23]">*</span> SIZE MATTERS
               </div>
-              <p className="md:col-span-2 text-sm md:text-lg">
+              <p>
                 <span className="font-black">GRAND SIZE:</span> +1,0 TND supplement on all espresso-based drinks.
                 <br />
                 <span className="font-black">EXTRAS:</span> Nappage / Sirops (Caramel, Vanille, Chocolat, Cookies) +1,0 DT - Creme Chantilly Royale +2,0 DT.
@@ -1242,8 +1243,8 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
             </div>
           </div>
 
-          <div className="text-center mt-16">
-            <button onClick={() => { onNav('landing'); window.scrollTo({ top: 0 }); }} className="ripple-target mobile-tap motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#120d0e] px-8 py-4 font-black tracking-widest border-2 border-[#120d0e] transition-colors">
+          <div className="menu-bottom-action">
+            <button onClick={() => { onNav('landing'); window.scrollTo({ top: 0 }); }} className="menu-home-button ripple-target mobile-tap motion-card">
               ← BACK TO HOME
             </button>
           </div>
