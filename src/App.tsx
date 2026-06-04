@@ -497,46 +497,50 @@ function Navbar({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   ];
 
   return (
-    <nav className={`site-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'is-scrolled bg-[#120d0e] shadow-lg' : 'bg-transparent'}`}>
-      <div className="scroll-progress-bar" aria-hidden="true" />
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 flex items-center justify-between h-16 md:h-20">
-        <button onClick={() => onNav('landing')} className="flex items-center gap-3">
-          <BrandLogo
-            tone="white"
-            className="h-9 md:h-12 w-auto max-w-[180px] object-contain"
-            fallbackClassName="text-[#f3eee9] font-black tracking-widest text-xl md:text-2xl font-display"
-          />
-        </button>
-        <div className="hidden lg:flex items-center gap-1">
-          {links.map((l) => (
-            <button key={l.anchor} onClick={() => onNav('landing', l.anchor)} className="mobile-tap nav-link text-[#f3eee9] hover:text-[#e61a23] text-sm font-bold tracking-widest px-4 py-2 transition-colors">
-              {l.label}
+    <nav className={`site-nav fixed top-0 left-0 right-0 z-50 ${scrolled ? 'is-scrolled' : ''}`}>
+      <div className="nav-stage">
+        <div className="nav-panel">
+          <div className="scroll-progress-bar" aria-hidden="true" />
+          <button onClick={() => onNav('landing')} className="nav-brand mobile-tap" aria-label="Cosmitto home">
+            <BrandLogo
+              tone="white"
+              className="h-9 md:h-11 w-auto max-w-[178px] object-contain"
+              fallbackClassName="text-[#f3eee9] font-black tracking-widest text-xl md:text-2xl font-display"
+            />
+          </button>
+          <div className="nav-links">
+            {links.map((l) => (
+              <button key={l.anchor} onClick={() => onNav('landing', l.anchor)} className="mobile-tap nav-link">
+                {l.label}
+              </button>
+            ))}
+            <button onClick={() => onNav('menu')} className="mobile-tap nav-link">
+              MENU
             </button>
-          ))}
-          <button onClick={() => onNav('menu')} className="mobile-tap nav-link text-[#f3eee9] hover:text-[#e61a23] text-sm font-bold tracking-widest px-4 py-2 transition-colors">
-            MENU
+          </div>
+          <button onClick={() => onNav('menu')} className="ripple-target magnetic motion-card nav-cta">
+            VIEW MENU
+          </button>
+          <button className="nav-icon-button mobile-tap" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6">
+              {open ? (<><path d="M6 6l12 12" /><path d="M6 18L18 6" /></>)
+                   : (<><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></>)}
+            </svg>
           </button>
         </div>
-        <button onClick={() => onNav('menu')} className="ripple-target magnetic motion-card hidden lg:block bg-[#e61a23] text-[#f3eee9] hover:bg-[#f3eee9] hover:text-[#120d0e] px-5 py-2 font-black tracking-widest text-sm border-2 border-[#f3eee9] transition-colors">
-          VIEW MENU
-        </button>
-        <button className="mobile-tap lg:hidden text-[#f3eee9]" onClick={() => setOpen(!open)} aria-label="Menu">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-            {open ? (<><path d="M6 6l12 12" /><path d="M6 18L18 6" /></>)
-                 : (<><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></>)}
-          </svg>
-        </button>
       </div>
       {open && (
-        <div className="mobile-menu-panel lg:hidden bg-[#120d0e] border-t-2 border-[#e61a23] px-4 py-4 flex flex-col gap-2">
-          {links.map((l) => (
-            <button key={l.anchor} onClick={() => { setOpen(false); onNav('landing', l.anchor); }} className="ripple-target mobile-tap text-[#f3eee9] text-lg font-bold tracking-widest py-2 border-b border-[#e61a23]/30 text-left">
-              {l.label}
+        <div className="mobile-nav-stage">
+          <div className="mobile-menu-panel">
+            {links.map((l) => (
+              <button key={l.anchor} onClick={() => { setOpen(false); onNav('landing', l.anchor); }} className="ripple-target mobile-tap mobile-menu-link">
+                {l.label}
+              </button>
+            ))}
+            <button onClick={() => { setOpen(false); onNav('menu'); }} className="ripple-target mobile-tap mobile-menu-link">
+              MENU
             </button>
-          ))}
-          <button onClick={() => { setOpen(false); onNav('menu'); }} className="ripple-target mobile-tap text-[#f3eee9] text-lg font-bold tracking-widest py-2 border-b border-[#e61a23]/30 text-left">
-            MENU
-          </button>
+          </div>
         </div>
       )}
     </nav>
