@@ -10,7 +10,7 @@ Manual publish checklist
 6. Confirm the favicon appears in the browser tab.
 7. Test the site on iPhone Safari and Android Chrome.
 8. Test the menu page and every navbar link after deployment.
-9. Replace placeholder social links in the footer with real Instagram, Facebook, and YouTube URLs.
-10. Confirm the contact email, phone number, address, opening hours, and prices are final.
+9. Confirm the footer social links open Instagram, Facebook, YouTube, and Spotify correctly.
+10. Confirm the contact email, +216 55 046 609 phone number, address, opening hours, and prices are final.
 11. If any hero video fails on mobile, host the MP4 files on Vercel storage, Cloudinary, or another direct-video host.
 12. Submit https://cosmittocoffee.vercel.app/sitemap.xml in Google Search Console.

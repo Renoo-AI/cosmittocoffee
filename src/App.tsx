@@ -15,6 +15,76 @@ const LOGO_URLS = {
   white: '/assets/logo-white.png',
 };
 const HERO_POSTER_URL = 'https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1600&auto=format&fit=crop';
+const PHONE_DISPLAY = '+216 55 046 609';
+const PHONE_HREF = 'tel:+21655046609';
+const SOCIAL_LINKS = [
+  { label: 'IG', name: 'Instagram', href: 'https://www.instagram.com/cosmittocoffee/' },
+  { label: 'FB', name: 'Facebook', href: 'https://www.facebook.com/cosmittotunisie' },
+  { label: 'YT', name: 'YouTube', href: 'https://www.youtube.com/watch?v=lgOHrDPXjqA&t=622s' },
+  { label: 'SP', name: 'Spotify', href: 'https://open.spotify.com/episode/7IzwU0Zl0pKx6KckGqngOl' },
+];
+const LOCATIONS = [
+  {
+    name: 'Place Barcelone',
+    rating: '3.7',
+    reviews: '104 reviews',
+    price: '1-10 DT',
+    type: 'Cafe',
+    address: '15 Av. De Carthage',
+    hours: 'Closes at 21:00',
+    url: 'https://www.google.com/maps/place/Cosmitto+Coffee+-+Place+barcelone/data=!4m7!3m6!1s0x12fd35a94728697f:0x63a7c0d5db05879d!8m2!3d36.7966182!4d10.1813301!16s%2Fg%2F11lh6ff3xz!19sChIJf2koR6k1_RIRnYcF29XAp2M',
+  },
+  {
+    name: 'LAC I',
+    rating: '3.8',
+    reviews: '354 reviews',
+    price: '10-20 DT',
+    type: 'Cafe',
+    address: 'R6MP+4GC, Rue du Lac Biwa',
+    hours: 'Closes at 23:00',
+    url: 'https://www.google.com/maps/place/Cosmitto+Coffee+LAC+I/data=!4m7!3m6!1s0x12fd351543f90e55:0x2c0667e9dc07fc6e!8m2!3d36.8328079!4d10.2362698!16s%2Fg%2F11bbrlyn_k!19sChIJVQ75QxU1_RIRbvwH3OlnBiw',
+  },
+  {
+    name: 'La Marsa',
+    rating: '3.8',
+    reviews: '248 reviews',
+    price: '1-10 DT',
+    type: 'Roaster',
+    address: 'La Marsa',
+    hours: 'Closes at 22:00',
+    url: 'https://www.google.com/maps/place/Cosmitto+Coffee+-+La+Marsa/data=!4m7!3m6!1s0x12e2b492d202d237:0x891f9f25b7ade77!8m2!3d36.8769277!4d10.3276936!16s%2Fg%2F11c0t8zg22!19sChIJN9IC0pK04hIRd956W_L5kQg',
+  },
+  {
+    name: "L'aouina",
+    rating: '3.3',
+    reviews: '18 reviews',
+    price: 'Price TBA',
+    type: 'Cafe',
+    address: 'Les Jasmins, Avenue Dar Fadhal',
+    hours: 'Closes at 23:00',
+    url: 'https://www.google.com/maps/place/Cosmitto+L%27aouina/data=!4m7!3m6!1s0x12e2cb9470b0a865:0x113a6e175986fd65!8m2!3d36.861393!4d10.2548889!16s%2Fg%2F11rxpmn7tn!19sChIJZaiwcJTL4hIRZf2GWRduOhE',
+  },
+  {
+    name: 'Cosmitto Coffee',
+    rating: '2.6',
+    reviews: '38 reviews',
+    price: '10-20 DT',
+    type: 'Cafe',
+    address: 'P7G4+8VQ',
+    hours: 'Closes at 23:00',
+    url: 'https://www.google.com/maps/place/Cosmitto+Coffee/data=!4m7!3m6!1s0x12fd3797a42a7b47:0x459e85ec97c719f4!8m2!3d36.7258375!4d10.2572189!16s%2Fg%2F11j3sgbb1r!19sChIJR3sqpJc3_RIR9BnHl-yFnkU',
+  },
+  {
+    name: 'Cosmitto Express',
+    rating: '3.5',
+    reviews: '68 reviews',
+    price: '1-10 DT',
+    type: 'Cafe',
+    address: 'Rte regionale 22',
+    hours: 'Closes at 22:00',
+    url: 'https://www.google.com/maps/place/COSMITTO+EXPRESS/data=!4m7!3m6!1s0x12fd365227443255:0xa58d5cecfc8166a9!8m2!3d36.7334158!4d10.224562!16s%2Fg%2F11b7lnbw9s!19sChIJVTJEJ1I2_RIRqWaB_OxcjaU',
+  },
+];
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -985,7 +1055,7 @@ function Visit() {
   const rows = [
     { k: 'LOCATION', v: ['R6MP+4GC, Rue du Lac Biwa', 'Tunis, Tunisia'] },
     { k: 'HOURS', v: ['Open daily - 08:00 - 23:00'] },
-    { k: 'CONTACT', v: ['71 862 842'] },
+    { k: 'CONTACT', v: [PHONE_DISPLAY] },
     { k: 'VIBE', v: ['Calm - Study-friendly - Loud music'] },
   ];
   return (
@@ -1030,9 +1100,53 @@ function Visit() {
                     <span key={t} className="text-xs font-black tracking-wider border-2 border-[#f3eee9] px-3 py-1">#{t}</span>
                   ))}
                 </div>
+                <a
+                  href={LOCATIONS[1].url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ripple-target mobile-tap mt-6 inline-flex border-2 border-[#f3eee9] px-4 py-3 text-xs font-black tracking-[0.18em] hover:bg-[#f3eee9] hover:text-[#120d0e] transition-colors"
+                >
+                  OPEN MAP
+                </a>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 mt-14">
+        <div className="reveal-up mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="text-xs font-black tracking-[0.3em] text-[#e61a23] mb-2">ALL LOCATIONS</div>
+            <h3 className="font-display text-4xl md:text-6xl leading-none">FIND COSMITTO.</h3>
+          </div>
+          <a href={PHONE_HREF} className="ripple-target mobile-tap border-2 border-[#e61a23] px-5 py-3 text-sm font-black tracking-[0.16em] text-[#e61a23] hover:bg-[#e61a23] hover:text-[#f3eee9] transition-colors">
+            CALL {PHONE_DISPLAY}
+          </a>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {LOCATIONS.map((location, index) => (
+            <a
+              key={location.url}
+              href={location.url}
+              target="_blank"
+              rel="noreferrer"
+              className="reveal-up motion-card mobile-tap group border-2 border-[#f3eee9] bg-[#f3eee9] text-[#120d0e] p-5 hover:bg-[#e61a23] hover:text-[#f3eee9] transition-colors"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="text-xs font-black tracking-[0.22em] text-[#e61a23] group-hover:text-[#120d0e] transition-colors">
+                  {String(index + 1).padStart(2, '0')} / {location.type}
+                </div>
+                <div className="font-display text-2xl leading-none">{location.rating} *</div>
+              </div>
+              <div className="font-display text-3xl mt-5 leading-none">{location.name}</div>
+              <div className="mt-3 text-sm font-bold opacity-80">{location.address}</div>
+              <div className="mt-5 flex flex-wrap gap-2 text-[0.68rem] font-black tracking-[0.12em]">
+                <span className="border border-current px-2 py-1">{location.reviews}</span>
+                <span className="border border-current px-2 py-1">{location.price}</span>
+                <span className="border border-current px-2 py-1">{location.hours}</span>
+              </div>
+            </a>
+          ))}
         </div>
       </div>
     </section>
@@ -1057,12 +1171,20 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
               Coffee, culture, and cosmic vibes in the heart of Tunis. Brewed loud. Served bold.
             </p>
             <div className="flex gap-3 mt-8">
-              {['IG', 'FB', 'YT'].map((t) => (
-                <a key={t} href="#" aria-label={t} className="w-12 h-12 bg-[#120d0e] border-2 border-[#f3eee9] flex items-center justify-center font-black text-lg hover:bg-[#f3eee9] hover:text-[#120d0e] transition-colors">
-                  {t}
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.name}
+                  className="w-12 h-12 bg-[#120d0e] border-2 border-[#f3eee9] flex items-center justify-center font-black text-lg hover:bg-[#f3eee9] hover:text-[#120d0e] transition-colors"
+                >
+                  {social.label}
                 </a>
               ))}
             </div>
+            <p className="mt-4 text-sm font-black tracking-[0.18em] text-[#120d0e]">79K FOLLOWERS - 9 FOLLOWING</p>
           </div>
           <div className="md:col-span-3">
             <div className="text-xs font-black tracking-[0.3em] text-[#120d0e] mb-4">EXPLORE</div>
@@ -1075,8 +1197,8 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
           </div>
           <div className="md:col-span-4">
             <div className="text-xs font-black tracking-[0.3em] text-[#120d0e] mb-4">CONTACT</div>
-            <p className="text-lg">R6MP+4GC, Rue du Lac Biwa<br />Tunis, Tunisia</p>
-            <p className="text-lg mt-4">71 862 842</p>
+            <p className="text-lg">Cosmitto, Tunis, Tunisia, 2070<br />R6MP+4GC, Rue du Lac Biwa</p>
+            <a href={PHONE_HREF} className="inline-block text-lg mt-4 hover:text-[#120d0e]">{PHONE_DISPLAY}</a>
             <p className="text-lg">hello@cosmitto.tn</p>
           </div>
         </div>
