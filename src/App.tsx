@@ -626,6 +626,8 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [soundOn, setSoundOn] = useState(false);
   const [videoArmed, setVideoArmed] = useState(false);
   const [needsVideoTap, setNeedsVideoTap] = useState(false);
+  const [warmingVideoUrl, setWarmingVideoUrl] = useState('');
+  const [videoReloadKey, setVideoReloadKey] = useState(0);
   const [videoProgress, setVideoProgress] = useState(0);
   const currentVideoUrl = HERO_VIDEO_URLS[activeVideo];
 
@@ -633,6 +635,21 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     const videoTimer = window.setTimeout(() => setVideoArmed(true), 650);
     return () => window.clearTimeout(videoTimer);
   }, []);
+
+  useEffect(() => {
+    if (!videoArmed) return;
+
+    setWarmingVideoUrl(currentVideoUrl);
+    const reloadTimer = window.setTimeout(() => {
+      setVideoReloadKey((key) => key + 1);
+      setWarmingVideoUrl('');
+    }, 1400);
+
+    return () => {
+      window.clearTimeout(reloadTimer);
+      setWarmingVideoUrl('');
+    };
+  }, [activeVideo, currentVideoUrl, videoArmed]);
 
   useEffect(() => {
     setVideoLoaded(false);
@@ -664,7 +681,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         video.play().catch(() => setNeedsVideoTap(true));
       });
     }
-  }, [activeVideo, videoArmed]);
+  }, [activeVideo, videoArmed, videoReloadKey]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -751,10 +768,24 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
   return (
     <section id="top" className="relative w-full h-screen min-h-[650px] overflow-hidden bg-[#120d0e]">
+      {warmingVideoUrl && (
+        <iframe
+          key={warmingVideoUrl}
+          src={warmingVideoUrl}
+          title="Cosmitto video loader"
+          sandbox="allow-scripts allow-same-origin"
+          referrerPolicy="no-referrer"
+          className="pointer-events-none absolute h-px w-px opacity-0"
+          aria-hidden="true"
+          tabIndex={-1}
+        />
+      )}
+
       {/* Video layer */}
       {videoArmed && !videoError ? (
         <video
           ref={videoRef}
+          key={`${activeVideo}-${videoReloadKey}`}
           src={currentVideoUrl}
           className={`hero-media absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
           autoPlay
