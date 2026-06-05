@@ -1535,27 +1535,27 @@ function LandingPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }
 
 function NotFoundPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   return (
-    <section className="min-h-screen bg-[#f3eee9] text-[#120d0e] pt-28 pb-16 flex items-center">
-      <div className="max-w-[860px] mx-auto px-4 md:px-8 w-full">
-        <div className="reveal-up border-2 border-[#120d0e] bg-[#f3eee9] p-7 md:p-10">
+    <section className="min-h-screen bg-[#f3eee9] text-[#120d0e] pt-24 pb-14 flex items-center">
+      <div className="max-w-[640px] mx-auto px-4 md:px-8 w-full">
+        <div className="reveal-up border-2 border-[#120d0e] bg-[#f3eee9] p-6 md:p-8">
           <BrandLogo
             tone="black"
-            className="mb-8 h-12 md:h-14 w-auto max-w-[220px] object-contain"
-            fallbackClassName="block text-[#120d0e] font-black tracking-widest text-3xl font-display mb-8"
+            className="mb-6 h-9 md:h-10 w-auto max-w-[168px] object-contain"
+            fallbackClassName="block text-[#120d0e] font-black tracking-widest text-2xl font-display mb-6"
           />
-          <div className="text-[#e61a23] font-black tracking-[0.24em] text-xs md:text-sm mb-5">404 / LOST IN ORBIT</div>
-          <h1 className="font-display text-6xl md:text-8xl leading-[0.86]">
+          <div className="text-[#e61a23] font-black tracking-[0.2em] text-[0.68rem] md:text-xs mb-4">404 / LOST IN ORBIT</div>
+          <h1 className="font-display text-5xl md:text-6xl leading-[0.9]">
             PAGE<br />
             <span className="text-[#e61a23]">NOT FOUND.</span>
           </h1>
-          <p className="mt-5 max-w-xl text-base md:text-lg text-[#120d0e]/72 leading-relaxed">
+          <p className="mt-4 max-w-md text-sm md:text-base text-[#120d0e]/72 leading-relaxed">
             This page is not on the Cosmitto map. Go back home or jump straight to the full menu.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3">
-            <button onClick={() => onNav('landing')} className="mobile-tap motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#120d0e] px-6 py-3 font-black tracking-widest border-2 border-[#120d0e] transition-colors">
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <button onClick={() => onNav('landing')} className="mobile-tap motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#120d0e] px-5 py-3 text-xs font-black tracking-widest border-2 border-[#120d0e] transition-colors">
               BACK HOME
             </button>
-            <button onClick={() => onNav('menu')} className="mobile-tap motion-card bg-transparent text-[#120d0e] hover:bg-[#120d0e] hover:text-[#f3eee9] px-6 py-3 font-black tracking-widest border-2 border-[#120d0e] transition-colors">
+            <button onClick={() => onNav('menu')} className="mobile-tap motion-card bg-transparent text-[#120d0e] hover:bg-[#120d0e] hover:text-[#f3eee9] px-5 py-3 text-xs font-black tracking-widest border-2 border-[#120d0e] transition-colors">
               VIEW MENU
             </button>
           </div>
