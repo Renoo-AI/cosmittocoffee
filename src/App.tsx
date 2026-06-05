@@ -147,14 +147,13 @@ function smoothScrollToElement(id: string) {
   smoothScrollToY(Math.max(top, 0), 1200);
 }
 
-function smoothScrollMenuSectionToCenter(id: string) {
+function smoothScrollMenuSectionIntoView(id: string) {
   const element = document.getElementById(id);
   if (!element) return;
 
-  const target = element.querySelector<HTMLElement>('.menu-section-tag') ?? element;
-  const targetCenter = target.getBoundingClientRect().top + window.scrollY + target.offsetHeight / 2;
-  const viewportCenter = window.innerHeight / 2;
-  smoothScrollToY(Math.max(targetCenter - viewportCenter, 0), 1050);
+  const offset = window.innerWidth < 768 ? 146 : 168;
+  const top = element.getBoundingClientRect().top + window.scrollY - offset;
+  smoothScrollToY(Math.max(top, 0), 1050);
 }
 
 function useSmoothReveals(trigger: unknown) {
@@ -1372,23 +1371,20 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     let frame = 0;
     const updateActiveSection = () => {
       frame = 0;
-      const anchorLine = window.innerHeight * (window.innerWidth < 768 ? 0.48 : 0.5);
+      const anchorLine = window.innerWidth < 768 ? 160 : 190;
       let nextActive = MENU[0].id;
-      let bestDistance = Number.POSITIVE_INFINITY;
 
       for (const section of MENU) {
         const element = document.getElementById(section.id);
         if (!element) continue;
 
-        const marker = element.querySelector<HTMLElement>('.menu-section-tag') ?? element;
-        const rect = marker.getBoundingClientRect();
-        const sectionRect = element.getBoundingClientRect();
-        if (sectionRect.bottom < 0 || sectionRect.top > window.innerHeight) continue;
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= anchorLine && rect.bottom > anchorLine) {
+          nextActive = section.id;
+          break;
+        }
 
-        const markerCenter = rect.top + rect.height / 2;
-        const distance = Math.abs(markerCenter - anchorLine);
-        if (distance < bestDistance) {
-          bestDistance = distance;
+        if (rect.top <= anchorLine) {
           nextActive = section.id;
         }
       }
@@ -1474,7 +1470,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
                       event.preventDefault();
                       activeRef.current = s.id;
                       setActive(s.id);
-                      smoothScrollMenuSectionToCenter(s.id);
+                      smoothScrollMenuSectionIntoView(s.id);
                     }}
                     className={`menu-tab mobile-tap ${
                       active === s.id ? 'is-active' : ''
