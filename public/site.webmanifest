@@ -9,7 +9,7 @@
   "theme_color": "#120d0e",
   "icons": [
     {
-      "src": "https://dropshare.42web.io/1/files/mFhZvT7Izq.png",
+      "src": "/assets/favicon.png",
       "sizes": "500x500",
       "type": "image/png",
       "purpose": "any maskable"

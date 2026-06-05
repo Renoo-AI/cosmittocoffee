@@ -14,7 +14,7 @@ const LOGO_URLS = {
   red: '/assets/logo-red.png',
   white: '/assets/logo-white.png',
 };
-const HERO_POSTER_URL = 'https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1600&auto=format&fit=crop';
+const HERO_POSTER_URL = '/assets/hero-poster.jpg';
 const PHONE_DISPLAY = '+216 55 046 609';
 const PHONE_HREF = 'tel:+21655046609';
 const SOCIAL_LINKS = [
@@ -959,7 +959,7 @@ function Story() {
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 grid md:grid-cols-12 gap-8 items-center">
         <div className="reveal-left md:col-span-6 relative">
           <div className="motion-card sticker bg-[#120d0e] text-[#f3eee9] p-2 rotate-[-2deg]">
-            <img src="https://dropshare.42web.io/1/files/ZiNfkClFQp.png" alt="Coffee beans" className="w-full h-[420px] object-cover transition-transform duration-700 hover:scale-[1.03]" />
+            <img src="/assets/coffee-beans.png" alt="Coffee beans" className="w-full h-[420px] object-cover transition-transform duration-700 hover:scale-[1.03]" />
           </div>
           <div className="reveal-up delay-2 absolute -bottom-6 -right-6 bg-[#e61a23] text-[#f3eee9] p-4 border-2 border-[#120d0e] font-black tracking-widest sticker rotate-[6deg] hidden md:block">
             <div className="text-5xl md:text-6xl font-display">31.9K</div>
@@ -1012,10 +1012,10 @@ function Story() {
 // ============ CATEGORY GRID ============
 function CategoryGrid({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const cats = [
-    { title: 'MORNING BOOST', num: '01', img: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=600&auto=format&fit=crop', tag: 'BREAKFAST', id: 'morning' },
-    { title: 'CRUNCHY FRAPPES', num: '02', img: 'https://dropshare.42web.io/1/files/4kDfInxvLF.png?q=80&w=600&auto=format&fit=crop', tag: 'SIGNATURE', id: 'frappe' },
-    { title: 'CLASSIC BENNA', num: '03', img: 'https://dropshare.42web.io/1/files/qCFS25og6A.png?q=80&w=600&auto=format&fit=crop', tag: 'ESPRESSO', id: 'classic' },
-    { title: '7AJA BERDA', num: '04', img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=600&auto=format&fit=crop', tag: 'COLD', id: 'cold' },
+    { title: 'MORNING BOOST', num: '01', img: '/assets/morning-boost.jpg', tag: 'BREAKFAST', id: 'morning' },
+    { title: 'CRUNCHY FRAPPES', num: '02', img: '/assets/frappe.png', tag: 'SIGNATURE', id: 'frappe' },
+    { title: 'CLASSIC BENNA', num: '03', img: '/assets/classic-coffee.png', tag: 'ESPRESSO', id: 'classic' },
+    { title: '7AJA BERDA', num: '04', img: '/assets/cold-drink.jpg', tag: 'COLD', id: 'cold' },
   ];
   return (
     <section className="bg-[#120d0e] py-20 md:py-28 text-[#f3eee9]">
@@ -1176,7 +1176,7 @@ function Visit() {
         <div className="reveal-right md:col-span-7">
           <div className="motion-card border-4 border-[#f3eee9] bg-[#e61a23] text-[#f3eee9] p-4 rotate-[-2deg] min-h-[500px]">
             <div className="bg-[#120d0e] w-full h-full min-h-[470px] flex flex-col">
-              <img src="https://dropshare.42web.io/1/files/lhGzHp0cK5.png" alt="Cosmitto interior" className="w-full h-64 object-cover" />
+              <img src="/assets/interior.png" alt="Cosmitto interior" className="w-full h-64 object-cover" />
               <div className="p-6 flex-1">
                 <div className="font-display text-3xl mb-4">COSMITTO COFFEE LAC I</div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
