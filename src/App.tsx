@@ -624,16 +624,31 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [, setFailedVideos] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
+  const soundOnRef = useRef(false);
   const [videoArmed, setVideoArmed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const [warmingVideoUrl, setWarmingVideoUrl] = useState('');
   const [videoProgress, setVideoProgress] = useState(0);
   const currentVideoUrl = HERO_VIDEO_URLS[activeVideo];
 
+  const setGlobalSound = (nextSoundOn: boolean) => {
+    soundOnRef.current = nextSoundOn;
+    setSoundOn(nextSoundOn);
+  };
+
+  const applySoundPreference = (video: HTMLVideoElement, nextSoundOn = soundOnRef.current) => {
+    video.muted = !nextSoundOn;
+    video.volume = nextSoundOn ? 0.72 : 0;
+  };
+
   useEffect(() => {
     const videoTimer = window.setTimeout(() => setVideoArmed(true), 650);
     return () => window.clearTimeout(videoTimer);
   }, []);
+
+  useEffect(() => {
+    soundOnRef.current = soundOn;
+  }, [soundOn]);
 
   useEffect(() => {
     if (!videoArmed) return;
@@ -668,8 +683,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     });
 
     video.pause();
-    video.muted = !soundOn;
-    video.volume = soundOn ? 0.72 : 0;
+    applySoundPreference(video);
     video.currentTime = 0;
     video.load();
 
@@ -677,17 +691,21 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     let retryTwo = 0;
 
     const playMuted = () => {
-      video.play().catch(() => {
+      video.muted = true;
+      video.volume = 0;
+      video.play().then(() => {
+        if (soundOnRef.current) applySoundPreference(video, true);
+      }).catch(() => {
         video.muted = true;
         video.volume = 0;
-        setSoundOn(false);
       });
     };
 
-    video.play().catch(() => {
+    video.play().then(() => {
+      if (soundOnRef.current) applySoundPreference(video, true);
+    }).catch(() => {
       video.muted = true;
       video.volume = 0;
-      setSoundOn(false);
       retryOne = window.setTimeout(playMuted, 600);
       retryTwo = window.setTimeout(playMuted, 1800);
     });
@@ -702,10 +720,12 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     const wakeVideo = () => {
       const video = videoRef.current;
       if (!video || video.paused === false) return;
-      video.muted = true;
-      video.volume = 0;
-      setSoundOn(false);
-      video.play().catch(() => undefined);
+      applySoundPreference(video);
+      video.play().catch(() => {
+        video.muted = true;
+        video.volume = 0;
+        video.play().catch(() => undefined);
+      });
     };
 
     document.addEventListener('visibilitychange', wakeVideo);
@@ -723,10 +743,12 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
     const wakeVideo = () => {
       if (!video.paused) return;
-      video.muted = true;
-      video.volume = 0;
-      setSoundOn(false);
-      video.play().catch(() => undefined);
+      applySoundPreference(video);
+      video.play().catch(() => {
+        video.muted = true;
+        video.volume = 0;
+        video.play().catch(() => undefined);
+      });
     };
 
     window.addEventListener('touchstart', wakeVideo, { once: true, passive: true });
@@ -746,8 +768,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       media.muted = true;
       media.volume = 0;
     });
-    videoRef.current.muted = !soundOn;
-    videoRef.current.volume = soundOn ? 0.72 : 0;
+    applySoundPreference(videoRef.current, soundOn);
   }, [soundOn, activeVideo]);
 
   const goToNextVideo = () => {
@@ -768,7 +789,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
   const toggleSound = async () => {
     const nextSoundOn = !soundOn;
-    setSoundOn(nextSoundOn);
+    setGlobalSound(nextSoundOn);
 
     if (videoRef.current) {
       document.querySelectorAll<HTMLMediaElement>('video, audio').forEach((media) => {
@@ -777,13 +798,14 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         media.muted = true;
         media.volume = 0;
       });
-      videoRef.current.muted = !nextSoundOn;
-      videoRef.current.volume = nextSoundOn ? 0.72 : 0;
+      applySoundPreference(videoRef.current, nextSoundOn);
 
       try {
         await videoRef.current.play();
       } catch {
-        setSoundOn(false);
+        videoRef.current.muted = true;
+        videoRef.current.volume = 0;
+        videoRef.current.play().catch(() => undefined);
       }
     }
   };
@@ -826,6 +848,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
           onCanPlay={() => setVideoLoaded(true)}
           onPlaying={() => {
             setVideoLoaded(true);
+            if (soundOnRef.current && videoRef.current) applySoundPreference(videoRef.current, true);
           }}
           onTimeUpdate={updateVideoProgress}
           onEnded={goToNextVideo}
