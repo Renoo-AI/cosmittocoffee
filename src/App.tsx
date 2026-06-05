@@ -626,8 +626,6 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [soundOn, setSoundOn] = useState(false);
   const soundOnRef = useRef(false);
   const [videoArmed, setVideoArmed] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
-  const [warmingVideoUrl, setWarmingVideoUrl] = useState('');
   const [videoProgress, setVideoProgress] = useState(0);
   const currentVideoUrl = HERO_VIDEO_URLS[activeVideo];
 
@@ -651,27 +649,9 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   }, [soundOn]);
 
   useEffect(() => {
+    setVideoLoaded(false);
+    setVideoProgress(0);
     if (!videoArmed) return;
-
-    setVideoReady(false);
-    setVideoLoaded(false);
-    setVideoProgress(0);
-    setWarmingVideoUrl(currentVideoUrl);
-    const warmupTimer = window.setTimeout(() => {
-      setWarmingVideoUrl('');
-      setVideoReady(true);
-    }, 1200);
-
-    return () => {
-      window.clearTimeout(warmupTimer);
-      setWarmingVideoUrl('');
-    };
-  }, [activeVideo, currentVideoUrl, videoArmed]);
-
-  useEffect(() => {
-    setVideoLoaded(false);
-    setVideoProgress(0);
-    if (!videoArmed || !videoReady) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -713,8 +693,13 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     return () => {
       if (retryOne) window.clearTimeout(retryOne);
       if (retryTwo) window.clearTimeout(retryTwo);
+      video.pause();
+      video.muted = true;
+      video.volume = 0;
+      video.removeAttribute('src');
+      video.load();
     };
-  }, [activeVideo, videoArmed, videoReady]);
+  }, [activeVideo, currentVideoUrl, videoArmed]);
 
   useEffect(() => {
     const wakeVideo = () => {
@@ -758,7 +743,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       window.removeEventListener('touchstart', wakeVideo);
       window.removeEventListener('pointerdown', wakeVideo);
     };
-  }, [activeVideo, videoReady]);
+  }, [activeVideo, videoArmed]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -818,21 +803,8 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
   return (
     <section id="top" className="relative w-full h-screen min-h-[650px] overflow-hidden bg-[#120d0e]">
-      {warmingVideoUrl && (
-        <iframe
-          key={warmingVideoUrl}
-          src={warmingVideoUrl}
-          title="Cosmitto video loader"
-          sandbox="allow-scripts allow-same-origin"
-          referrerPolicy="no-referrer"
-          className="pointer-events-none absolute h-px w-px opacity-0"
-          aria-hidden="true"
-          tabIndex={-1}
-        />
-      )}
-
       {/* Video layer */}
-      {videoArmed && videoReady && !videoError ? (
+      {videoArmed && !videoError ? (
         <video
           ref={videoRef}
           key={activeVideo}
@@ -873,7 +845,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
       <div className="absolute inset-0 hero-overlay" />
 
-      {videoArmed && videoReady && !videoError && (
+      {videoArmed && !videoError && (
         <button
           onClick={toggleSound}
           aria-pressed={soundOn}
