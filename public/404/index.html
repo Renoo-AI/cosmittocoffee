@@ -36,17 +36,18 @@
       }
 
       main {
-        width: min(640px, 100%);
+        width: min(560px, 100%);
         border: 2px solid #120d0e;
         padding: clamp(24px, 4vw, 32px);
         background: #f3eee9;
+        text-align: center;
       }
 
       img {
         display: block;
-        width: min(168px, 56vw);
+        width: min(156px, 54vw);
         height: auto;
-        margin-bottom: 24px;
+        margin: 0 auto 24px;
       }
 
       .eyebrow {
@@ -59,28 +60,42 @@
       }
 
       h1 {
-        margin: 0;
+        margin: 16px 0 0;
         font-family: Anton, Impact, sans-serif;
-        font-size: clamp(3.15rem, 10vw, 4.2rem);
-        line-height: 0.9;
+        font-size: clamp(2.25rem, 8vw, 3rem);
+        line-height: 1;
         font-weight: 400;
       }
 
-      h1 span {
+      .code {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-family: Anton, Impact, sans-serif;
+        font-size: clamp(4rem, 14vw, 5.6rem);
+        line-height: 1;
+      }
+
+      .bean {
+        width: clamp(40px, 10vw, 48px);
+        height: clamp(56px, 14vw, 64px);
         color: #e61a23;
+        transform: rotate(-12deg);
       }
 
       p {
-        max-width: 440px;
+        max-width: 380px;
         color: rgba(18, 13, 14, 0.72);
         font-size: clamp(0.9rem, 2vw, 1rem);
         line-height: 1.6;
-        margin: 16px 0 0;
+        margin: 16px auto 0;
       }
 
       nav {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         gap: 12px;
         margin-top: 24px;
       }
@@ -120,7 +135,15 @@
     <main>
       <img src="/assets/logo-black.png" alt="Cosmitto Coffee" />
       <div class="eyebrow">404 / LOST IN ORBIT</div>
-      <h1>PAGE<br /><span>NOT FOUND.</span></h1>
+      <div class="code" aria-label="404">
+        <span>4</span>
+        <svg class="bean" viewBox="0 0 24 32" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 8.72 2 17c0 8.28 4.48 13 10 13s10-4.72 10-13C22 8.72 17.52 2 12 2Z" />
+          <path d="M12.5 27C11 20 13 12 11.5 5" fill="none" stroke="#f3eee9" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span>4</span>
+      </div>
+      <h1>PAGE NOT FOUND.</h1>
       <p>This page is not on the Cosmitto map. Go back home or jump straight to the full menu.</p>
       <nav aria-label="404 navigation">
         <a href="/">Back home</a>

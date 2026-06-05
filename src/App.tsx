@@ -1354,33 +1354,56 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [active, setActive] = useState('morning');
   const menuTabListRef = useRef<HTMLDivElement | null>(null);
+  const activeRef = useRef('morning');
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const ids = MENU.map((s) => s.id);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
-      { rootMargin: '-40% 0px -55% 0px' }
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
+
+    let frame = 0;
+    const updateActiveSection = () => {
+      frame = 0;
+      const anchorLine = window.innerWidth < 768 ? 150 : 178;
+      let nextActive = MENU[0].id;
+
+      for (const section of MENU) {
+        const element = document.getElementById(section.id);
+        if (!element) continue;
+        if (element.getBoundingClientRect().top <= anchorLine) {
+          nextActive = section.id;
+        } else {
+          break;
+        }
+      }
+
+      if (nextActive !== activeRef.current) {
+        activeRef.current = nextActive;
+        setActive(nextActive);
+      }
+    };
+
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateActiveSection);
+    };
+
+    updateActiveSection();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
+    };
   }, []);
 
   useEffect(() => {
     const activeTab = menuTabListRef.current?.querySelector<HTMLAnchorElement>(`[data-menu-tab="${active}"]`);
-    if (!activeTab) return;
+    const tabShell = menuTabListRef.current?.parentElement;
+    if (!activeTab || !tabShell) return;
 
-    activeTab.scrollIntoView({
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-      block: 'nearest',
-      inline: 'center',
+    tabShell.scrollTo({
+      left: activeTab.offsetLeft + activeTab.offsetWidth / 2 - tabShell.clientWidth / 2,
+      behavior: 'auto',
     });
   }, [active]);
 
@@ -1429,6 +1452,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
                     href={`#${s.id}`}
                     onClick={(event) => {
                       event.preventDefault();
+                      activeRef.current = s.id;
                       setActive(s.id);
                       smoothScrollToElement(s.id);
                     }}
@@ -1536,22 +1560,29 @@ function LandingPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }
 function NotFoundPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   return (
     <section className="min-h-screen bg-[#f3eee9] text-[#120d0e] pt-24 pb-14 flex items-center">
-      <div className="max-w-[640px] mx-auto px-4 md:px-8 w-full">
-        <div className="reveal-up border-2 border-[#120d0e] bg-[#f3eee9] p-6 md:p-8">
+      <div className="max-w-[560px] mx-auto px-4 md:px-8 w-full">
+        <div className="reveal-up border-2 border-[#120d0e] bg-[#f3eee9] p-6 md:p-8 text-center">
           <BrandLogo
             tone="black"
-            className="mb-6 h-9 md:h-10 w-auto max-w-[168px] object-contain"
+            className="mx-auto mb-6 h-8 md:h-9 w-auto max-w-[156px] object-contain"
             fallbackClassName="block text-[#120d0e] font-black tracking-widest text-2xl font-display mb-6"
           />
           <div className="text-[#e61a23] font-black tracking-[0.2em] text-[0.68rem] md:text-xs mb-4">404 / LOST IN ORBIT</div>
-          <h1 className="font-display text-5xl md:text-6xl leading-[0.9]">
-            PAGE<br />
-            <span className="text-[#e61a23]">NOT FOUND.</span>
+          <div className="flex items-center justify-center gap-2 md:gap-3" aria-label="404">
+            <span className="font-display text-6xl md:text-7xl leading-none">4</span>
+            <svg className="h-14 w-10 md:h-16 md:w-12 -rotate-12 text-[#e61a23]" viewBox="0 0 24 32" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.48 2 2 8.72 2 17c0 8.28 4.48 13 10 13s10-4.72 10-13C22 8.72 17.52 2 12 2Z" />
+              <path d="M12.5 27C11 20 13 12 11.5 5" fill="none" stroke="#f3eee9" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <span className="font-display text-6xl md:text-7xl leading-none">4</span>
+          </div>
+          <h1 className="mt-4 font-display text-3xl md:text-4xl leading-none">
+            PAGE NOT FOUND.
           </h1>
-          <p className="mt-4 max-w-md text-sm md:text-base text-[#120d0e]/72 leading-relaxed">
+          <p className="mx-auto mt-4 max-w-sm text-sm md:text-base text-[#120d0e]/72 leading-relaxed">
             This page is not on the Cosmitto map. Go back home or jump straight to the full menu.
           </p>
-          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
             <button onClick={() => onNav('landing')} className="mobile-tap motion-card bg-[#e61a23] text-[#f3eee9] hover:bg-[#120d0e] px-5 py-3 text-xs font-black tracking-widest border-2 border-[#120d0e] transition-colors">
               BACK HOME
             </button>

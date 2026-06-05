@@ -1187,7 +1187,7 @@ body.motion-ready .reveal-right.is-settled {
 
   .menu-tab-list {
     gap: 8px;
-    padding-inline: 50%;
+    padding-inline: calc(50% - min(37vw, 125px));
   }
 
   .menu-tab {
