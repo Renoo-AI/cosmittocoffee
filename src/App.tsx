@@ -1364,7 +1364,6 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 // ============ MENU PAGE ============
 function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [active, setActive] = useState('morning');
-  const menuTabListRef = useRef<HTMLDivElement | null>(null);
   const activeRef = useRef('morning');
 
   useEffect(() => {
@@ -1412,19 +1411,6 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     };
   }, []);
 
-  useEffect(() => {
-    const activeTab = menuTabListRef.current?.querySelector<HTMLAnchorElement>(`[data-menu-tab="${active}"]`);
-    const tabShell = menuTabListRef.current?.parentElement;
-    if (!activeTab || !tabShell) return;
-
-    const targetLeft = activeTab.offsetLeft + activeTab.offsetWidth / 2 - tabShell.clientWidth / 2;
-    const maxLeft = Math.max(tabShell.scrollWidth - tabShell.clientWidth, 0);
-    tabShell.scrollTo({
-      left: Math.min(Math.max(targetLeft, 0), maxLeft),
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-    });
-  }, [active]);
-
   return (
     <div className="menu-page min-h-screen text-[#120d0e] pt-24">
       {/* Menu hero */}
@@ -1457,36 +1443,33 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         </div>
       </section>
 
-      {/* Sticky nav + items */}
+      {/* Number rail + items */}
       <section className="menu-content-section">
-        <div className="menu-shell">
-          <div className="menu-nav-sticky sticky top-20 z-30">
-            <div className="menu-tab-shell">
-              <div ref={menuTabListRef} className="menu-tab-list">
-                {MENU.map((s) => (
-                  <a
-                    key={s.id}
-                    data-menu-tab={s.id}
-                    href={`#${s.id}`}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      activeRef.current = s.id;
-                      setActive(s.id);
-                      smoothScrollMenuSectionIntoView(s.id);
-                    }}
-                    className={`menu-tab mobile-tap ${
-                      active === s.id ? 'is-active' : ''
-                    }`}
-                    aria-current={active === s.id ? 'true' : undefined}
-                  >
-                    <span className="menu-tab-number">{s.tag}</span>
-                    {s.label}
-                  </a>
-                ))}
-              </div>
-            </div>
+        <nav className="menu-rail" aria-label="Menu sections">
+          <div className="menu-tab-list">
+            {MENU.map((s) => (
+              <a
+                key={s.id}
+                data-menu-tab={s.id}
+                href={`#${s.id}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  activeRef.current = s.id;
+                  setActive(s.id);
+                  smoothScrollMenuSectionIntoView(s.id);
+                }}
+                className={`menu-tab mobile-tap ${active === s.id ? 'is-active' : ''}`}
+                aria-current={active === s.id ? 'true' : undefined}
+                aria-label={`${s.tag} ${s.label}`}
+              >
+                <span className="menu-tab-number">{s.tag}</span>
+                <span className="menu-tab-label">{s.label}</span>
+              </a>
+            ))}
           </div>
+        </nav>
 
+        <div className="menu-shell">
           <div className="menu-sections">
             {MENU.map((section) => (
               <article
