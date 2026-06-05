@@ -26,6 +26,7 @@ Check locally:
 - homepage renders correctly
 - `/menu` renders correctly
 - `/404` renders correctly
+- `/qr-sticker/` renders correctly
 - navbar links scroll to the right sections
 - menu tabs scroll and highlight correctly
 - footer links open the right social platforms
@@ -74,6 +75,7 @@ After every deployment, verify:
 - `/` returns the homepage
 - `/menu` works after refresh
 - `/404` works after refresh
+- `/qr-sticker/` works after refresh
 - `/assets/videos/hero-01.mp4` returns `video/mp4`
 - `/assets/favicon.png` returns `image/png`
 - security headers are present
@@ -88,4 +90,3 @@ Provide the client with:
 - this `PLAN.md`
 - `IDEAS.md` for optional future upgrades
 - note that source files are edited in `src/`, and public assets live in `public/assets`
-

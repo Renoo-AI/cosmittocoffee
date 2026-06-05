@@ -72,6 +72,7 @@ Important folders and files:
 - Hero videos: `public/assets/videos/hero-01.mp4`, `hero-02.mp4`, `hero-03.mp4`
 - Local fonts: `public/assets/fonts`
 - Page images: `hero-poster.jpg`, `coffee-beans.png`, `frappe.png`, `classic-coffee.png`, `interior.png`, `morning-boost.jpg`, `cold-drink.jpg`
+- QR sticker drop folder: `public/qr-sticker/`
 
 To replace an asset, keep the same filename and path when possible. This avoids needing code changes.
 
@@ -105,6 +106,7 @@ Then check:
 - homepage loads
 - `/menu` loads
 - `/404` loads
+- `/qr-sticker/` loads
 - hero videos play on desktop and mobile
 - mute/unmute works
 - favicon appears in the browser tab
@@ -118,4 +120,3 @@ These folders are generated locally and should not be committed:
 - `node_modules/`
 - `dist/`
 - `.vercel/`
-

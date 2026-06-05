@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>QR Sticker - Cosmitto Coffee</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png" />
+    <style>
+      @font-face {
+        font-family: Anton;
+        src: url("/assets/fonts/anton-400.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: Montserrat;
+        src: url("/assets/fonts/montserrat-700.ttf") format("truetype");
+        font-weight: 700;
+        font-display: swap;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #f3eee9;
+        color: #120d0e;
+        font-family: Montserrat, system-ui, sans-serif;
+        padding: 24px;
+      }
+
+      main {
+        width: min(680px, 100%);
+        border: 2px solid #120d0e;
+        background: #f3eee9;
+        padding: clamp(24px, 4vw, 36px);
+      }
+
+      img {
+        display: block;
+        width: min(168px, 56vw);
+        height: auto;
+        margin-bottom: 24px;
+      }
+
+      .eyebrow {
+        color: #e61a23;
+        font-size: 0.72rem;
+        font-weight: 900;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Anton, Impact, sans-serif;
+        font-size: clamp(3rem, 10vw, 4.8rem);
+        line-height: 0.92;
+        font-weight: 400;
+      }
+
+      h1 span {
+        color: #e61a23;
+      }
+
+      p {
+        max-width: 500px;
+        color: rgba(18, 13, 14, 0.72);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 16px 0 0;
+      }
+
+      .drop-note {
+        margin-top: 22px;
+        border: 2px dashed rgba(18, 13, 14, 0.42);
+        padding: 16px;
+        color: rgba(18, 13, 14, 0.76);
+        font-size: 0.8rem;
+        line-height: 1.55;
+      }
+
+      code {
+        background: #120d0e;
+        color: #f3eee9;
+        padding: 2px 6px;
+        font-size: 0.78rem;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      a {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #120d0e;
+        color: #120d0e;
+        padding: 0 16px;
+        font-size: 0.72rem;
+        font-weight: 900;
+        letter-spacing: 0.16em;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+
+      a:first-child {
+        background: #e61a23;
+        color: #f3eee9;
+      }
+
+      a:hover,
+      a:focus-visible {
+        background: #120d0e;
+        color: #f3eee9;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/assets/logo-black.png" alt="Cosmitto Coffee" />
+      <div class="eyebrow">Client asset folder</div>
+      <h1>QR<br /><span>STICKER.</span></h1>
+      <p>This folder is ready for QR sticker images, print exports, and client handoff files.</p>
+      <div class="drop-note">
+        Drop future sticker images inside <code>public/qr-sticker/</code>.
+        Keep this <code>index.html</code> file if you want this page to stay available at <code>/qr-sticker/</code>.
+      </div>
+      <nav aria-label="QR sticker navigation">
+        <a href="/">Back home</a>
+        <a href="/menu">View menu</a>
+      </nav>
+    </main>
+  </body>
+</html>
