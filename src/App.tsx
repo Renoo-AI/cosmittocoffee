@@ -625,9 +625,9 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [, setFailedVideos] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
   const [videoArmed, setVideoArmed] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const [needsVideoTap, setNeedsVideoTap] = useState(false);
   const [warmingVideoUrl, setWarmingVideoUrl] = useState('');
-  const [videoReloadKey, setVideoReloadKey] = useState(0);
   const [videoProgress, setVideoProgress] = useState(0);
   const currentVideoUrl = HERO_VIDEO_URLS[activeVideo];
 
@@ -639,14 +639,18 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   useEffect(() => {
     if (!videoArmed) return;
 
+    setVideoReady(false);
+    setVideoLoaded(false);
+    setNeedsVideoTap(false);
+    setVideoProgress(0);
     setWarmingVideoUrl(currentVideoUrl);
-    const reloadTimer = window.setTimeout(() => {
-      setVideoReloadKey((key) => key + 1);
+    const warmupTimer = window.setTimeout(() => {
       setWarmingVideoUrl('');
-    }, 1400);
+      setVideoReady(true);
+    }, 1200);
 
     return () => {
-      window.clearTimeout(reloadTimer);
+      window.clearTimeout(warmupTimer);
       setWarmingVideoUrl('');
     };
   }, [activeVideo, currentVideoUrl, videoArmed]);
@@ -655,7 +659,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     setVideoLoaded(false);
     setNeedsVideoTap(false);
     setVideoProgress(0);
-    if (!videoArmed) return;
+    if (!videoArmed || !videoReady) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -681,7 +685,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         video.play().catch(() => setNeedsVideoTap(true));
       });
     }
-  }, [activeVideo, videoArmed, videoReloadKey]);
+  }, [activeVideo, videoArmed, videoReady]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -782,10 +786,10 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       )}
 
       {/* Video layer */}
-      {videoArmed && !videoError ? (
+      {videoArmed && videoReady && !videoError ? (
         <video
           ref={videoRef}
-          key={`${activeVideo}-${videoReloadKey}`}
+          key={activeVideo}
           src={currentVideoUrl}
           className={`hero-media absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
           autoPlay
@@ -823,7 +827,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
       <div className="absolute inset-0 hero-overlay" />
 
-      {videoArmed && !videoLoaded && !videoError && needsVideoTap && (
+      {videoArmed && videoReady && !videoLoaded && !videoError && needsVideoTap && (
         <button
           onClick={startVideoFromTap}
           className="mobile-tap absolute left-1/2 top-[58%] z-30 -translate-x-1/2 border-2 border-[#f3eee9] bg-[#e61a23] px-5 py-3 text-xs font-black tracking-[0.18em] text-[#f3eee9] transition-colors hover:bg-[#f3eee9] hover:text-[#120d0e]"
@@ -832,7 +836,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         </button>
       )}
 
-      {videoArmed && !videoError && (
+      {videoArmed && videoReady && !videoError && (
         <button
           onClick={toggleSound}
           aria-pressed={soundOn}
