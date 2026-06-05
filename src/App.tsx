@@ -17,6 +17,7 @@ const LOGO_URLS = {
 const HERO_POSTER_URL = '/assets/hero-poster.jpg';
 const PHONE_DISPLAY = '+216 55 046 609';
 const PHONE_HREF = 'tel:+21655046609';
+const WHATSAPP_HREF = 'https://wa.me/21655046609';
 const SOCIAL_LINKS = [
   { icon: 'instagram', name: 'Instagram', href: 'https://www.instagram.com/cosmittocoffee/' },
   { icon: 'facebook', name: 'Facebook', href: 'https://www.facebook.com/cosmittotunisie' },
@@ -185,6 +186,32 @@ function useIntroReady() {
   }, []);
 
   return ready;
+}
+
+function useRouteMetadata(page: Page) {
+  useEffect(() => {
+    const metadata = {
+      landing: {
+        title: 'Cosmitto Coffee - Coffee, Culture & Cosmic Vibes',
+        description: 'Specialty coffee, breakfast combos, signature frappes, pastries, happy hour, and Cosmitto locations across Tunis.',
+      },
+      menu: {
+        title: 'Cosmitto Coffee Menu - Drinks, Breakfast & Desserts',
+        description: 'Explore the Cosmitto Coffee menu with espresso drinks, frappes, breakfast options, pastries, cold drinks, and dessert specials.',
+      },
+      notFound: {
+        title: 'Page Not Found - Cosmitto Coffee',
+        description: 'The page you are looking for is not available. Return to Cosmitto Coffee or explore the full menu.',
+      },
+    }[page];
+
+    document.title = metadata.title;
+    document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', metadata.description);
+    document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', metadata.title);
+    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', metadata.description);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute('content', metadata.title);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute('content', metadata.description);
+  }, [page]);
 }
 
 function useSilkyPageMotion(trigger: unknown) {
@@ -846,6 +873,13 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
       <div className="absolute inset-0 hero-overlay" />
 
+      {videoArmed && !videoLoaded && !videoError && (
+        <div className="hero-video-loader" role="status" aria-live="polite">
+          <span />
+          Brewing
+        </div>
+      )}
+
       {videoArmed && !videoError && (
         <button
           onClick={toggleSound}
@@ -1312,6 +1346,19 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   );
 }
 
+function FloatingContact() {
+  return (
+    <div className="floating-contact" role="group" aria-label="Quick contact">
+      <a href={WHATSAPP_HREF} target="_blank" rel="noreferrer" className="floating-contact-link is-whatsapp">
+        WhatsApp
+      </a>
+      <a href={PHONE_HREF} className="floating-contact-link is-call">
+        Call
+      </a>
+    </div>
+  );
+}
+
 // ============ MENU PAGE ============
 function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [active, setActive] = useState('morning');
@@ -1524,6 +1571,7 @@ function App() {
   const [pendingAnchor, setPendingAnchor] = useState<string | null>(() => window.location.hash.replace('#', '') || null);
   const introReady = useIntroReady();
 
+  useRouteMetadata(page);
   useSilkyPageMotion(page);
 
   const handleNav = (p: Page, anchor?: string, replace = false) => {
@@ -1575,6 +1623,7 @@ function App() {
         {page === 'menu' && <MenuPage onNav={handleNav} />}
         {page === 'notFound' && <NotFoundPage onNav={handleNav} />}
       </main>
+      <FloatingContact />
     </div>
   );
 }
