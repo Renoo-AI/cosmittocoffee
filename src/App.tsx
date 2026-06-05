@@ -151,8 +151,10 @@ function smoothScrollMenuSectionIntoView(id: string) {
   const element = document.getElementById(id);
   if (!element) return;
 
-  const offset = window.innerWidth < 768 ? 146 : 168;
-  const top = element.getBoundingClientRect().top + window.scrollY - offset;
+  const header = element.querySelector<HTMLElement>('.menu-section-header') ?? element;
+  const headerFocus = header.getBoundingClientRect().top + window.scrollY + Math.min(header.offsetHeight * 0.42, 72);
+  const targetY = window.innerHeight * (window.innerWidth < 768 ? 0.38 : 0.4);
+  const top = headerFocus - targetY;
   smoothScrollToY(Math.max(top, 0), 1050);
 }
 
@@ -1371,7 +1373,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     let frame = 0;
     const updateActiveSection = () => {
       frame = 0;
-      const anchorLine = window.innerWidth < 768 ? 160 : 190;
+      const anchorLine = window.innerHeight * (window.innerWidth < 768 ? 0.38 : 0.4);
       let nextActive = MENU[0].id;
 
       for (const section of MENU) {
