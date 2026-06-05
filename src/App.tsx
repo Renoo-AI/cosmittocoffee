@@ -147,6 +147,16 @@ function smoothScrollToElement(id: string) {
   smoothScrollToY(Math.max(top, 0), 1200);
 }
 
+function smoothScrollMenuSectionToCenter(id: string) {
+  const element = document.getElementById(id);
+  if (!element) return;
+
+  const target = element.querySelector<HTMLElement>('.menu-section-tag') ?? element;
+  const targetCenter = target.getBoundingClientRect().top + window.scrollY + target.offsetHeight / 2;
+  const viewportCenter = window.innerHeight / 2;
+  smoothScrollToY(Math.max(targetCenter - viewportCenter, 0), 1050);
+}
+
 function useSmoothReveals(trigger: unknown) {
   useEffect(() => {
     document.body.classList.add('motion-ready');
@@ -1362,16 +1372,24 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     let frame = 0;
     const updateActiveSection = () => {
       frame = 0;
-      const anchorLine = window.innerWidth < 768 ? 150 : 178;
+      const anchorLine = window.innerHeight * (window.innerWidth < 768 ? 0.48 : 0.5);
       let nextActive = MENU[0].id;
+      let bestDistance = Number.POSITIVE_INFINITY;
 
       for (const section of MENU) {
         const element = document.getElementById(section.id);
         if (!element) continue;
-        if (element.getBoundingClientRect().top <= anchorLine) {
+
+        const marker = element.querySelector<HTMLElement>('.menu-section-tag') ?? element;
+        const rect = marker.getBoundingClientRect();
+        const sectionRect = element.getBoundingClientRect();
+        if (sectionRect.bottom < 0 || sectionRect.top > window.innerHeight) continue;
+
+        const markerCenter = rect.top + rect.height / 2;
+        const distance = Math.abs(markerCenter - anchorLine);
+        if (distance < bestDistance) {
+          bestDistance = distance;
           nextActive = section.id;
-        } else {
-          break;
         }
       }
 
@@ -1401,9 +1419,11 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     const tabShell = menuTabListRef.current?.parentElement;
     if (!activeTab || !tabShell) return;
 
+    const targetLeft = activeTab.offsetLeft + activeTab.offsetWidth / 2 - tabShell.clientWidth / 2;
+    const maxLeft = Math.max(tabShell.scrollWidth - tabShell.clientWidth, 0);
     tabShell.scrollTo({
-      left: activeTab.offsetLeft + activeTab.offsetWidth / 2 - tabShell.clientWidth / 2,
-      behavior: 'auto',
+      left: Math.min(Math.max(targetLeft, 0), maxLeft),
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
     });
   }, [active]);
 
@@ -1454,7 +1474,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
                       event.preventDefault();
                       activeRef.current = s.id;
                       setActive(s.id);
-                      smoothScrollToElement(s.id);
+                      smoothScrollMenuSectionToCenter(s.id);
                     }}
                     className={`menu-tab mobile-tap ${
                       active === s.id ? 'is-active' : ''
