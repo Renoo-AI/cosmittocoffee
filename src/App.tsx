@@ -1447,7 +1447,11 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
           <div className="menu-sections">
             {MENU.map((section) => (
-              <article id={section.id} key={section.id} className="menu-section-card reveal-up scroll-mt-32">
+              <article
+                id={section.id}
+                key={section.id}
+                className={`menu-section-card reveal-up scroll-mt-32 ${active === section.id ? 'is-active' : ''}`}
+              >
                 <div className="menu-section-header">
                   <div>
                     <span className="menu-section-tag">N {section.tag}</span>
