@@ -5,9 +5,9 @@ type Page = 'landing' | 'menu' | 'notFound';
 type MotionStyle = CSSProperties & Record<string, string | number>;
 
 const HERO_VIDEO_URLS = [
-  'https://dropshare.42web.io/1/files/fVkU7Q4oSP.mp4',
-  'https://dropshare.42web.io/1/files/9asN6BXde2.mp4',
-  'https://dropshare.42web.io/1/files/7eY39CTSbg.mp4',
+  '/assets/videos/hero-01.mp4',
+  '/assets/videos/hero-02.mp4',
+  '/assets/videos/hero-03.mp4',
 ];
 const LOGO_URLS = {
   black: '/assets/logo-black.png',
