@@ -626,7 +626,6 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [soundOn, setSoundOn] = useState(false);
   const [videoArmed, setVideoArmed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
-  const [needsVideoTap, setNeedsVideoTap] = useState(false);
   const [warmingVideoUrl, setWarmingVideoUrl] = useState('');
   const [videoProgress, setVideoProgress] = useState(0);
   const currentVideoUrl = HERO_VIDEO_URLS[activeVideo];
@@ -641,7 +640,6 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
     setVideoReady(false);
     setVideoLoaded(false);
-    setNeedsVideoTap(false);
     setVideoProgress(0);
     setWarmingVideoUrl(currentVideoUrl);
     const warmupTimer = window.setTimeout(() => {
@@ -657,7 +655,6 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
   useEffect(() => {
     setVideoLoaded(false);
-    setNeedsVideoTap(false);
     setVideoProgress(0);
     if (!videoArmed || !videoReady) return;
     const video = videoRef.current;
@@ -676,16 +673,70 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
     video.currentTime = 0;
     video.load();
 
-    const playPromise = video.play();
-    if (playPromise) {
-      playPromise.catch(() => {
+    let retryOne = 0;
+    let retryTwo = 0;
+
+    const playMuted = () => {
+      video.play().catch(() => {
         video.muted = true;
         video.volume = 0;
         setSoundOn(false);
-        video.play().catch(() => setNeedsVideoTap(true));
       });
-    }
+    };
+
+    video.play().catch(() => {
+      video.muted = true;
+      video.volume = 0;
+      setSoundOn(false);
+      retryOne = window.setTimeout(playMuted, 600);
+      retryTwo = window.setTimeout(playMuted, 1800);
+    });
+
+    return () => {
+      if (retryOne) window.clearTimeout(retryOne);
+      if (retryTwo) window.clearTimeout(retryTwo);
+    };
   }, [activeVideo, videoArmed, videoReady]);
+
+  useEffect(() => {
+    const wakeVideo = () => {
+      const video = videoRef.current;
+      if (!video || video.paused === false) return;
+      video.muted = true;
+      video.volume = 0;
+      setSoundOn(false);
+      video.play().catch(() => undefined);
+    };
+
+    document.addEventListener('visibilitychange', wakeVideo);
+    window.addEventListener('focus', wakeVideo);
+
+    return () => {
+      document.removeEventListener('visibilitychange', wakeVideo);
+      window.removeEventListener('focus', wakeVideo);
+    };
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const wakeVideo = () => {
+      if (!video.paused) return;
+      video.muted = true;
+      video.volume = 0;
+      setSoundOn(false);
+      video.play().catch(() => undefined);
+    };
+
+    window.addEventListener('touchstart', wakeVideo, { once: true, passive: true });
+    window.addEventListener('pointerdown', wakeVideo, { once: true, passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', wakeVideo);
+      window.removeEventListener('pointerdown', wakeVideo);
+    };
+  }, [activeVideo, videoReady]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -731,36 +782,9 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
 
       try {
         await videoRef.current.play();
-        setNeedsVideoTap(false);
       } catch {
         setSoundOn(false);
-        setNeedsVideoTap(true);
       }
-    }
-  };
-
-  const startVideoFromTap = async () => {
-    setVideoArmed(true);
-    const video = videoRef.current;
-    if (!video) return;
-
-    document.querySelectorAll<HTMLMediaElement>('video, audio').forEach((media) => {
-      if (media === video) return;
-      media.pause();
-      media.muted = true;
-      media.volume = 0;
-    });
-
-    video.muted = true;
-    video.volume = 0;
-    setSoundOn(false);
-
-    try {
-      await video.play();
-      setNeedsVideoTap(false);
-      setVideoLoaded(true);
-    } catch {
-      setNeedsVideoTap(true);
     }
   };
 
@@ -802,7 +826,6 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
           onCanPlay={() => setVideoLoaded(true)}
           onPlaying={() => {
             setVideoLoaded(true);
-            setNeedsVideoTap(false);
           }}
           onTimeUpdate={updateVideoProgress}
           onEnded={goToNextVideo}
@@ -826,15 +849,6 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       />
 
       <div className="absolute inset-0 hero-overlay" />
-
-      {videoArmed && videoReady && !videoLoaded && !videoError && needsVideoTap && (
-        <button
-          onClick={startVideoFromTap}
-          className="mobile-tap absolute left-1/2 top-[58%] z-30 -translate-x-1/2 border-2 border-[#f3eee9] bg-[#e61a23] px-5 py-3 text-xs font-black tracking-[0.18em] text-[#f3eee9] transition-colors hover:bg-[#f3eee9] hover:text-[#120d0e]"
-        >
-          PLAY VIDEO
-        </button>
-      )}
 
       {videoArmed && videoReady && !videoError && (
         <button
