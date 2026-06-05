@@ -17,7 +17,6 @@ const LOGO_URLS = {
 const HERO_POSTER_URL = '/assets/hero-poster.jpg';
 const PHONE_DISPLAY = '+216 55 046 609';
 const PHONE_HREF = 'tel:+21655046609';
-const WHATSAPP_HREF = 'https://wa.me/21655046609';
 const SOCIAL_LINKS = [
   { icon: 'instagram', name: 'Instagram', href: 'https://www.instagram.com/cosmittocoffee/' },
   { icon: 'facebook', name: 'Facebook', href: 'https://www.facebook.com/cosmittotunisie' },
@@ -89,10 +88,15 @@ const LOCATIONS = [
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const normalizePath = (path: string) => path.replace(/\/+$/, '') || '/';
+
+const isKnownPath = (path: string) => ['/', '/menu', '/404'].includes(normalizePath(path));
+
 const getPageFromPath = (path: string): Page => {
-  const normalized = path.replace(/\/+$/, '') || '/';
+  const normalized = normalizePath(path);
   if (normalized === '/') return 'landing';
   if (normalized === '/menu') return 'menu';
+  if (normalized === '/404') return 'notFound';
   return 'notFound';
 };
 
@@ -1346,19 +1350,6 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   );
 }
 
-function FloatingContact() {
-  return (
-    <div className="floating-contact" role="group" aria-label="Quick contact">
-      <a href={WHATSAPP_HREF} target="_blank" rel="noreferrer" className="floating-contact-link is-whatsapp">
-        WhatsApp
-      </a>
-      <a href={PHONE_HREF} className="floating-contact-link is-call">
-        Call
-      </a>
-    </div>
-  );
-}
-
 // ============ MENU PAGE ============
 function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
   const [active, setActive] = useState('morning');
@@ -1590,15 +1581,19 @@ function App() {
   };
 
   useEffect(() => {
-    if (page === 'notFound' && window.location.pathname !== '/404') {
+    if (page === 'notFound' && !isKnownPath(window.location.pathname)) {
       window.history.replaceState({ page: 'notFound' }, '', '/404');
     }
   }, [page]);
 
   useEffect(() => {
     const onPopState = () => {
-      setPage(getPageFromPath(window.location.pathname));
+      const nextPage = getPageFromPath(window.location.pathname);
+      setPage(nextPage);
       setPendingAnchor(window.location.hash.replace('#', '') || null);
+      if (nextPage === 'notFound' && !isKnownPath(window.location.pathname)) {
+        window.history.replaceState({ page: 'notFound' }, '', '/404');
+      }
     };
 
     window.addEventListener('popstate', onPopState);
@@ -1623,7 +1618,6 @@ function App() {
         {page === 'menu' && <MenuPage onNav={handleNav} />}
         {page === 'notFound' && <NotFoundPage onNav={handleNav} />}
       </main>
-      <FloatingContact />
     </div>
   );
 }

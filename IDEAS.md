@@ -21,12 +21,10 @@ Optional improvements the client can choose after the first delivery.
 - Add per-route page titles for homepage, menu, and 404.
 - Add a more polished hero video loading transition.
 - Improve menu category navigation with stronger active-section feedback.
-- Add a floating WhatsApp or call button on mobile.
 - Add subtle page transition animations between landing, menu, and 404.
 
 ## Business Features
 
-- Add WhatsApp ordering or reservation CTA.
 - Add embedded Google Maps for the main location.
 - Add QR menu support for tables.
 - Add customer review highlights from Google or Facebook.
@@ -43,4 +41,3 @@ Optional improvements the client can choose after the first delivery.
 ## Recommended Next Pick
 
 The highest-value next improvement is an editable config file for menu, locations, phone, social links, and SEO. It makes future maintenance easier and makes the project feel more professional for handoff.
-

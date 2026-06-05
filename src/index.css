@@ -712,58 +712,6 @@ body.motion-ready .reveal-right.is-settled {
   animation: loader-steps 900ms steps(3, end) infinite;
 }
 
-.floating-contact {
-  position: fixed;
-  right: max(16px, env(safe-area-inset-right));
-  bottom: max(18px, env(safe-area-inset-bottom));
-  z-index: 48;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.floating-contact-link {
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #f3eee9;
-  background: rgba(18, 13, 14, 0.9);
-  color: #f3eee9;
-  padding: 0 14px;
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  box-shadow: 4px 4px 0 #e61a23;
-  transition:
-    transform 120ms steps(2, end),
-    background-color 120ms steps(2, end),
-    color 120ms steps(2, end),
-    box-shadow 120ms steps(2, end);
-}
-
-.floating-contact-link:hover,
-.floating-contact-link:focus-visible {
-  background: #e61a23;
-  color: #f3eee9;
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #120d0e;
-}
-
-.floating-contact-link.is-call {
-  background: rgba(243, 238, 233, 0.92);
-  color: #120d0e;
-  border-color: #120d0e;
-}
-
-.floating-contact-link.is-call:hover,
-.floating-contact-link.is-call:focus-visible {
-  background: #120d0e;
-  color: #f3eee9;
-  border-color: #f3eee9;
-}
-
 .menu-page {
   background:
     linear-gradient(180deg, #120d0e 0 300px, #f3eee9 300px 100%),
@@ -1358,10 +1306,6 @@ body.motion-ready .reveal-right.is-settled {
     scroll-padding-top: 72px;
   }
 
-  .page-shell {
-    padding-bottom: 72px;
-  }
-
   .hero-media {
     animation: phone-hero-breathe 18s ease-in-out infinite;
   }
@@ -1432,20 +1376,6 @@ body.motion-ready .reveal-right.is-settled {
   .video-dot {
     width: 38px;
     height: 5px;
-  }
-
-  .floating-contact {
-    left: max(12px, env(safe-area-inset-left));
-    right: max(12px, env(safe-area-inset-right));
-    bottom: max(12px, env(safe-area-inset-bottom));
-    justify-content: center;
-  }
-
-  .floating-contact-link {
-    flex: 1;
-    max-width: 170px;
-    min-height: 44px;
-    padding: 0 10px;
   }
 
   .motion-char {
