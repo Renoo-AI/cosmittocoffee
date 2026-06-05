@@ -22,24 +22,31 @@
         margin: 0;
         display: grid;
         place-items: center;
-        background: #120d0e;
-        color: #f3eee9;
+        background: #f3eee9;
+        color: #120d0e;
         font-family: system-ui, sans-serif;
         padding: 24px;
       }
 
       main {
-        width: min(1180px, 100%);
-        border: 2px solid #f3eee9;
-        padding: clamp(32px, 5vw, 56px);
-        background: #120d0e;
+        width: min(860px, 100%);
+        border: 2px solid #120d0e;
+        padding: clamp(28px, 4vw, 40px);
+        background: #f3eee9;
+      }
+
+      img {
+        display: block;
+        width: min(220px, 64vw);
+        height: auto;
+        margin-bottom: 32px;
       }
 
       .eyebrow {
         color: #e61a23;
-        font-size: 0.88rem;
+        font-size: clamp(0.72rem, 2vw, 0.88rem);
         font-weight: 900;
-        letter-spacing: 0.3em;
+        letter-spacing: 0.24em;
         text-transform: uppercase;
         margin-bottom: 20px;
       }
@@ -47,8 +54,8 @@
       h1 {
         margin: 0;
         font-family: Anton, Impact, sans-serif;
-        font-size: clamp(4.4rem, 14vw, 10rem);
-        line-height: 0.82;
+        font-size: clamp(4rem, 13vw, 7.8rem);
+        line-height: 0.86;
         font-weight: 400;
       }
 
@@ -58,27 +65,27 @@
 
       p {
         max-width: 620px;
-        color: rgba(243, 238, 233, 0.82);
-        font-size: clamp(1rem, 2vw, 1.22rem);
+        color: rgba(18, 13, 14, 0.72);
+        font-size: clamp(1rem, 2vw, 1.12rem);
         line-height: 1.65;
-        margin: 24px 0 0;
+        margin: 20px 0 0;
       }
 
       nav {
         display: flex;
         flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 36px;
+        gap: 12px;
+        margin-top: 32px;
       }
 
       a {
-        min-height: 48px;
+        min-height: 44px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid #f3eee9;
-        color: #f3eee9;
-        padding: 0 22px;
+        border: 2px solid #120d0e;
+        color: #120d0e;
+        padding: 0 18px;
         font-size: 0.78rem;
         font-weight: 900;
         letter-spacing: 0.16em;
@@ -91,18 +98,20 @@
 
       a:first-child {
         background: #e61a23;
+        color: #f3eee9;
       }
 
       a:hover,
       a:focus-visible {
-        background: #f3eee9;
-        color: #120d0e;
+        background: #120d0e;
+        color: #f3eee9;
         outline: none;
       }
     </style>
   </head>
   <body>
     <main>
+      <img src="/assets/logo-black.png" alt="Cosmitto Coffee" />
       <div class="eyebrow">404 / LOST IN ORBIT</div>
       <h1>PAGE<br /><span>NOT FOUND.</span></h1>
       <p>This page is not on the Cosmitto map. Go back home or jump straight to the full menu.</p>
