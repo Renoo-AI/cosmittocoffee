@@ -591,7 +591,8 @@ function Navbar({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
             VIEW MENU
           </button>
           <button className="nav-icon-button mobile-tap" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6">
+            <span className="sr-only">Menu</span>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
               {open ? (<><path d="M6 6l12 12" /><path d="M6 18L18 6" /></>)
                    : (<><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></>)}
             </svg>
@@ -838,7 +839,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       {/* Poster fallback image layer (always rendered underlay) */}
       <img
         src={HERO_POSTER_URL}
-        alt=""
+        alt="Cosmitto coffee atmosphere background"
         className={`hero-media absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded && !videoError ? 'opacity-0' : 'opacity-100'}`}
         aria-hidden="true"
       />
@@ -853,6 +854,7 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
           title={soundOn ? 'Mute' : 'Unmute'}
           className="mobile-tap absolute bottom-8 right-4 md:right-12 z-20 h-12 w-12 bg-[#120d0e]/85 text-[#f3eee9] hover:bg-[#e61a23] border-2 border-[#f3eee9] font-black flex items-center justify-center transition-colors"
         >
+          <span className="sr-only">{soundOn ? 'Mute video sound' : 'Unmute video sound'}</span>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
             <path d="M4 9v6h4l5 4V5L8 9H4z" />
             {soundOn ? (
@@ -870,15 +872,19 @@ function Hero({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
         </button>
       )}
 
-      <div className="video-playlist-indicator" aria-hidden="true">
+      <div className="video-playlist-indicator" role="group" aria-label="Hero video playlist">
         {HERO_VIDEO_URLS.map((_, index) => (
           <button
+            type="button"
             key={index}
             className={`video-dot ${index === activeVideo ? 'is-active' : ''}`}
             onClick={() => setActiveVideo(index)}
-            tabIndex={-1}
+            aria-label={`Show hero video ${index + 1}`}
+            aria-current={index === activeVideo ? 'true' : undefined}
           >
+            <span className="sr-only">{`Show hero video ${index + 1}`}</span>
             <span
+              aria-hidden="true"
               style={{ '--dot-progress': index === activeVideo ? videoProgress : index < activeVideo ? 1 : 0 } as MotionStyle}
             />
           </button>
@@ -1248,7 +1254,11 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-16">
         <div className="reveal-up grid md:grid-cols-12 gap-8 items-start">
           <div className="md:col-span-5">
-            <button onClick={() => { onNav('landing'); window.scrollTo({ top: 0 }); }} className="text-left">
+            <button
+              onClick={() => { onNav('landing'); window.scrollTo({ top: 0 }); }}
+              className="text-left"
+              aria-label="Cosmitto home"
+            >
               <BrandLogo
                 tone="black"
                 className="mb-6 h-16 md:h-24 w-auto max-w-[320px] object-contain"
@@ -1268,6 +1278,7 @@ function Footer({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
                   aria-label={social.name}
                   className="w-12 h-12 bg-[#120d0e] border-2 border-[#f3eee9] flex items-center justify-center font-black text-lg hover:bg-[#f3eee9] hover:text-[#120d0e] transition-colors"
                 >
+                  <span className="sr-only">{social.name}</span>
                   <SocialIcon icon={social.icon} />
                 </a>
               ))}
