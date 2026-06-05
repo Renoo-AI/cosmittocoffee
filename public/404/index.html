@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>404 - Cosmitto Coffee</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png" />
+    <style>
+      @font-face {
+        font-family: Anton;
+        src: url("/assets/fonts/anton-400.ttf") format("truetype");
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: Montserrat;
+        src: url("/assets/fonts/montserrat-700.ttf") format("truetype");
+        font-weight: 700;
+        font-display: swap;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #120d0e;
+        color: #f3eee9;
+        font-family: Montserrat, system-ui, sans-serif;
+        padding: 24px;
+      }
+
+      main {
+        width: min(980px, 100%);
+        border: 2px solid #f3eee9;
+        padding: clamp(28px, 6vw, 64px);
+        background:
+          linear-gradient(135deg, rgba(230, 26, 35, 0.18), transparent 48%),
+          #120d0e;
+        box-shadow: 12px 12px 0 #e61a23;
+      }
+
+      img {
+        width: min(260px, 72vw);
+        height: auto;
+        margin-bottom: 34px;
+      }
+
+      .eyebrow {
+        color: #e61a23;
+        font-size: 0.82rem;
+        font-weight: 900;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Anton, Impact, sans-serif;
+        font-size: clamp(4.8rem, 18vw, 10rem);
+        line-height: 0.86;
+        letter-spacing: 0.01em;
+      }
+
+      h1 span {
+        color: #e61a23;
+      }
+
+      p {
+        max-width: 620px;
+        color: rgba(243, 238, 233, 0.82);
+        font-size: clamp(1rem, 2vw, 1.22rem);
+        line-height: 1.65;
+        margin: 28px 0 0;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 36px;
+      }
+
+      a {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #f3eee9;
+        color: #f3eee9;
+        padding: 0 22px;
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.16em;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+
+      a:first-child {
+        background: #e61a23;
+      }
+
+      a:hover,
+      a:focus-visible {
+        background: #f3eee9;
+        color: #120d0e;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/assets/logo-white.png" alt="Cosmitto Coffee" />
+      <div class="eyebrow">404 / Lost in orbit</div>
+      <h1>PAGE<br /><span>NOT FOUND.</span></h1>
+      <p>This page is not on the Cosmitto map. Go back home or jump straight to the full menu.</p>
+      <nav aria-label="404 navigation">
+        <a href="/">Back home</a>
+        <a href="/menu">View menu</a>
+      </nav>
+    </main>
+  </body>
+</html>
