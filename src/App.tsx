@@ -1393,6 +1393,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
       if (nextActive !== activeRef.current) {
         activeRef.current = nextActive;
         setActive(nextActive);
+        window.history.replaceState({ page: 'menu', anchor: nextActive }, '', `/menu#${nextActive}`);
       }
     };
 
@@ -1454,9 +1455,7 @@ function MenuPage({ onNav }: { onNav: (page: Page, anchor?: string) => void }) {
                 href={`#${s.id}`}
                 onClick={(event) => {
                   event.preventDefault();
-                  activeRef.current = s.id;
-                  setActive(s.id);
-                  smoothScrollMenuSectionIntoView(s.id);
+                  onNav('menu', s.id);
                 }}
                 className={`menu-tab mobile-tap ${active === s.id ? 'is-active' : ''}`}
                 aria-current={active === s.id ? 'true' : undefined}
